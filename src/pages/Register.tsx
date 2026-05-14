@@ -22,8 +22,10 @@ export default function Register() {
       await signInWithGoogle();
       toast.success('Registered successfully!');
       navigate('/');
-    } catch (error) {
-      toast.error('Failed to log in with Google');
+    } catch (error: any) {
+      if (error?.code !== 'auth/popup-closed-by-user') {
+        toast.error('Failed to log in with Google');
+      }
     }
   };
 

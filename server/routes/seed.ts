@@ -70,16 +70,20 @@ const sampleBrands = [
 
 const realisticProducts = [
   // Smartphones
-  { title: "iPhone 16 Pro Max", price: 1199, brand: "Apple", category: "Smartphones", thumb: "https://images.unsplash.com/photo-1696446701796-da61225697cc?q=80&w=800&auto=format&fit=crop" },
+  { title: "iPhone 16 Pro Max", price: 1199, brand: "Apple", category: "Smartphones", thumb: "https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?q=80&w=800&auto=format&fit=crop" },
   { title: "Samsung Galaxy S25 Ultra", price: 1299, brand: "Samsung", category: "Smartphones", thumb: "https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?q=80&w=800&auto=format&fit=crop" },
   { title: "Google Pixel 9 Pro", price: 999, brand: "Samsung", category: "Smartphones", thumb: "https://images.unsplash.com/photo-1598327105666-5b89351cb315?q=80&w=800&auto=format&fit=crop" },
   { title: "Realme Note 60x", price: 299, brand: "Realme", category: "Smartphones", thumb: "https://images.unsplash.com/photo-1598327105854-c9431e67610d?q=80&w=800&auto=format&fit=crop" },
+  { title: "OnePlus 12", price: 799, brand: "Samsung", category: "Smartphones", thumb: "https://images.unsplash.com/photo-1575316281084-3866223b3790?q=80&w=800&auto=format&fit=crop" },
+  { title: "iPhone 15", price: 799, brand: "Apple", category: "Smartphones", thumb: "https://images.unsplash.com/photo-1696446701796-da61225697cc?q=80&w=800&auto=format&fit=crop" },
   
   // Laptops
   { title: "MacBook Pro M4", price: 1999, brand: "Apple", category: "Laptops & PC", thumb: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=800&auto=format&fit=crop" },
   { title: "HP Laptop AMD Ryzen 5", price: 599, brand: "HP", category: "Laptops & PC", thumb: "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?q=80&w=800&auto=format&fit=crop" },
   { title: "Dell XPS 15", price: 1499, brand: "Intel", category: "Laptops & PC", thumb: "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?q=80&w=800&auto=format&fit=crop" },
   { title: "ASUS ROG Strix", price: 1299, brand: "Intel", category: "Laptops & PC", thumb: "https://images.unsplash.com/photo-1603302576837-37561b2e2302?q=80&w=800&auto=format&fit=crop" },
+  { title: "MacBook Air M3", price: 1099, brand: "Apple", category: "Laptops & PC", thumb: "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?q=80&w=800&auto=format&fit=crop" },
+  { title: "Lenovo ThinkPad X1", price: 1399, brand: "Intel", category: "Laptops & PC", thumb: "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?q=80&w=800&auto=format&fit=crop" },
 
   // Audio
   { title: "Apple AirPods Max", price: 549, brand: "Apple", category: "Audio & Headphones", thumb: "https://images.unsplash.com/photo-1613040809024-b4ef7ba99bc3?q=80&w=800&auto=format&fit=crop" },
@@ -87,28 +91,34 @@ const realisticProducts = [
   { title: "Sony WH-CH520", price: 79, brand: "Sony", category: "Audio & Headphones", thumb: "https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?q=80&w=800&auto=format&fit=crop" },
   { title: "JBL E55BT", price: 129, brand: "JBL", category: "Audio & Headphones", thumb: "https://images.unsplash.com/photo-1583394838336-acd977736f90?q=80&w=800&auto=format&fit=crop" },
   { title: "Bose QuietComfort 45", price: 329, brand: "Bose", category: "Audio & Headphones", thumb: "https://images.unsplash.com/photo-1546435770-a3e426bf472b?q=80&w=800&auto=format&fit=crop" },
+  { title: "Sony WF-1000XM5", price: 298, brand: "Sony", category: "Audio & Headphones", thumb: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?q=80&w=800&auto=format&fit=crop" },
 
   // Cameras
   { title: "Canon EOS 250D", price: 650, brand: "Canon", category: "Cameras", thumb: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=800&auto=format&fit=crop" },
   { title: "Sony A7 IV", price: 2498, brand: "Sony", category: "Cameras", thumb: "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?q=80&w=800&auto=format&fit=crop" },
   { title: "GoPro Hero 12", price: 399, brand: "Sony", category: "Cameras", thumb: "https://images.unsplash.com/photo-1565536480111-9a7c8ba0c8d1?q=80&w=800&auto=format&fit=crop" },
+  { title: "Fujifilm X-T5", price: 1699, brand: "Canon", category: "Cameras", thumb: "https://images.unsplash.com/photo-1512790182412-b19e6d62bc39?q=80&w=800&auto=format&fit=crop" },
 
   // Tablets
   { title: "iPad Pro M4", price: 1099, brand: "Apple", category: "Tablets", thumb: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?q=80&w=800&auto=format&fit=crop" },
   { title: "Samsung Galaxy Tab S9", price: 799, brand: "Samsung", category: "Tablets", thumb: "https://images.unsplash.com/photo-1561154464-82e9adf32764?q=80&w=800&auto=format&fit=crop" },
+  { title: "iPad Air 5", price: 599, brand: "Apple", category: "Tablets", thumb: "https://images.unsplash.com/photo-1589739900266-43b2843f4c12?q=80&w=800&auto=format&fit=crop" },
 
   // Wearables
   { title: "Apple Watch Ultra 2", price: 799, brand: "Apple", category: "Wearables", thumb: "https://images.unsplash.com/photo-1434493789847-2f02b0c166d1?q=80&w=800&auto=format&fit=crop" },
   { title: "Samsung Galaxy Watch 6", price: 299, brand: "Samsung", category: "Wearables", thumb: "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?q=80&w=800&auto=format&fit=crop" },
+  { title: "Garmin Fenix 7", price: 699, brand: "Samsung", category: "Wearables", thumb: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=800&auto=format&fit=crop" },
 
   // Gaming
   { title: "PS5 Console", price: 499, brand: "Sony", category: "Gaming", thumb: "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?q=80&w=800&auto=format&fit=crop" },
   { title: "Xbox Series X", price: 499, brand: "Sony", category: "Gaming", thumb: "https://images.unsplash.com/photo-1605901309584-818e25960b8f?q=80&w=800&auto=format&fit=crop" },
   { title: "Nintendo Switch OLED", price: 349, brand: "Sony", category: "Gaming", thumb: "https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?q=80&w=800&auto=format&fit=crop" },
+  { title: "PlayStation VR2", price: 549, brand: "Sony", category: "Gaming", thumb: "https://images.unsplash.com/photo-1622979135225-d2ba269cf1ac?q=80&w=800&auto=format&fit=crop" },
 
   // TV
   { title: "Samsung OLED 65\"", price: 1799, brand: "Samsung", category: "Television", thumb: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?q=80&w=800&auto=format&fit=crop" },
-  { title: "LG C4 OLED 55\"", price: 1499, brand: "LG", category: "Television", thumb: "https://images.unsplash.com/photo-1552831388-6a0b35077328?q=80&w=800&auto=format&fit=crop" }
+  { title: "LG C4 OLED 55\"", price: 1499, brand: "LG", category: "Television", thumb: "https://images.unsplash.com/photo-1552831388-6a0b35077328?q=80&w=800&auto=format&fit=crop" },
+  { title: "Sony Bravia XR 65\"", price: 1999, brand: "Sony", category: "Television", thumb: "https://images.unsplash.com/photo-1560169897-fc0cdbdfa4d5?q=80&w=800&auto=format&fit=crop" }
 ];
 
 const sampleBlogs = [
