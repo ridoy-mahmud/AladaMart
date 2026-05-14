@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingCart, Heart, Search, User, Menu, X, Package2, Phone, ChevronDown, LogOut, Smartphone, Laptop, Tablet, Headphones, Watch, Monitor, Camera, Speaker } from 'lucide-react';
+import { ShoppingCart, Heart, User, Menu, X, Package2, Phone, ChevronDown, LogOut, Smartphone, Laptop, Tablet, Headphones, Watch, Monitor, Camera, Speaker } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCartStore } from '../../store/useCartStore';
@@ -21,7 +21,6 @@ const categoryIcons: Record<string, React.ReactNode> = {
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const [categories, setCategories] = useState<any[]>([]);
   const cartItemsCount = useCartStore(state => state.items.reduce((total, item) => total + item.quantity, 0));
   const navigate = useNavigate();
@@ -33,15 +32,6 @@ export default function Header() {
       .then(data => setCategories(data))
       .catch(err => console.error(err));
   }, []);
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
-      setSearchQuery('');
-      setIsMobileMenuOpen(false);
-    }
-  };
 
   const handleLogout = async () => {
     try {
@@ -55,11 +45,11 @@ export default function Header() {
 
   const NavLinks = () => (
     <>
-      <Link to="/" className="text-sm font-medium hover:text-primary transition-colors">Home</Link>
+      <Link to="/" className="text-sm font-medium text-slate-900 hover:text-primary transition-colors">Home</Link>
       <Link to="/deal" className="text-sm border border-red-200 bg-red-50 text-red-600 rounded-full px-3 py-1 font-bold hover:bg-red-100 transition-colors">Hot Deals!</Link>
-      <Link to="/shop" className="text-sm font-medium hover:text-primary transition-colors">Shop</Link>
-      <Link to="/about" className="text-sm font-medium hover:text-primary transition-colors">About</Link>
-      <Link to="/contact" className="text-sm font-medium hover:text-primary transition-colors">Contact</Link>
+      <Link to="/shop" className="text-sm font-medium text-slate-900 hover:text-primary transition-colors">Shop</Link>
+      <Link to="/about" className="text-sm font-medium text-slate-900 hover:text-primary transition-colors">About</Link>
+      <Link to="/contact" className="text-sm font-medium text-slate-900 hover:text-primary transition-colors">Contact</Link>
     </>
   );
 
@@ -80,7 +70,7 @@ export default function Header() {
       </div>
       
       {/* Main Header */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-5 flex items-center justify-between gap-4 lg:gap-8 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-5 flex items-center justify-between gap-4 lg:gap-8 bg-white border-b border-slate-100">
         
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 flex-shrink-0">
@@ -90,19 +80,10 @@ export default function Header() {
           <span className="text-2xl font-bold tracking-tight text-slate-900">Shop<span className="text-primary">Mart</span></span>
         </Link>
 
-        {/* Search Bar (Desktop) */}
-        <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-2xl relative">
-           <input 
-             type="text" 
-             value={searchQuery}
-             onChange={(e) => setSearchQuery(e.target.value)}
-             placeholder="Search for your products here..." 
-             className="w-full border-2 border-slate-200 rounded-lg py-2.5 pl-4 pr-14 focus:outline-none focus:border-primary transition-colors"
-           />
-           <button type="submit" className="absolute right-0 top-0 bottom-0 bg-primary text-white px-5 rounded-r-lg hover:bg-primary-dark transition-colors flex items-center justify-center">
-             <Search size={20} />
-           </button>
-        </form>
+        {/* Navigation (Desktop) */}
+        <nav className="hidden md:flex items-center gap-6">
+          <NavLinks />
+        </nav>
 
         {/* Icons */}
         <div className="flex items-center gap-5 sm:gap-6 flex-shrink-0">
@@ -149,69 +130,6 @@ export default function Header() {
             <Menu size={28} />
           </button>
         </div>
-      </div>
-
-       {/* Navigation (Desktop) */}
-       <div className="bg-white border-b border-slate-100 hidden md:block shadow-sm">
-         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center gap-8">
-            <div className="relative h-full group z-50">
-               <div className="cursor-pointer flex items-center justify-between gap-2 font-medium bg-slate-900 hover:bg-slate-800 text-white transition-colors h-full px-6 w-64 rounded-t-xl mt-1">
-                  <div className="flex items-center gap-2">
-                    <Menu size={20} />
-                    Browse Categories
-                  </div>
-                  <ChevronDown size={18} className="transition-transform group-hover:rotate-180" />
-               </div>
-               
-               {/* Dropdown Menu - Mega Menu Style */}
-               <div className="absolute top-full left-0 w-[400px] bg-white border border-slate-100 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 rounded-b-xl overflow-hidden mt-0">
-                  <div className="flex bg-white">
-                     <ul className="py-2 w-full max-h-[60vh] overflow-y-auto">
-                       {categories.map((cat, i) => (
-                         <li key={i}>
-                           <Link to={`/shop?category=${cat.slug}`} className="flex items-center px-6 py-3 hover:bg-slate-50 transition-colors group/item relative">
-                             <div className="mr-4 group-hover/item:scale-110 transition-transform">
-                               {categoryIcons[cat.slug] || <Package2 size={24} className="text-slate-400" />}
-                             </div>
-                             <div>
-                               <div className="text-slate-800 font-medium group-hover/item:text-primary transition-colors">{cat.name}</div>
-                               <div className="text-xs text-slate-500 capitalize">{cat.productCount > 0 ? `${cat.productCount} Products` : "Explore Now"}</div>
-                             </div>
-                           </Link>
-                         </li>
-                       ))}
-                       {categories.length === 0 && (
-                         <li className="px-6 py-6 text-center text-sm text-slate-500">Loading categories...</li>
-                       )}
-                       <li className="border-t border-slate-100 mt-2 p-4 pb-2 sticky bottom-0 bg-white">
-                         <Link to="/shop" className="flex items-center justify-center w-full bg-slate-900 text-white py-2.5 rounded-lg text-sm font-medium hover:bg-slate-800 transition-colors">
-                           View All Categories
-                         </Link>
-                       </li>
-                     </ul>
-                  </div>
-               </div>
-            </div>
-            <nav className="flex items-center gap-6">
-              <NavLinks />
-            </nav>
-         </div>
-       </div>
-
-      {/* Mobile Search - Visible only on small screens */}
-      <div className="border-t border-slate-100 p-3 md:hidden bg-white shadow-sm">
-        <form onSubmit={handleSearch} className="relative">
-           <input 
-             type="text" 
-             value={searchQuery}
-             onChange={(e) => setSearchQuery(e.target.value)}
-             placeholder="Search products..." 
-             className="w-full border border-slate-200 rounded-lg py-2 pl-4 pr-10 focus:outline-none focus:border-primary bg-white"
-           />
-           <button type="submit" className="absolute right-0 top-0 bottom-0 text-slate-500 px-3 hover:text-primary transition-colors">
-             <Search size={18} />
-           </button>
-        </form>
       </div>
 
       {/* Mobile Menu */}

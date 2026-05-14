@@ -154,43 +154,7 @@ export default function Shop() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
-      {/* Page Header */}
-      <div className="bg-white border border-slate-100 shadow-sm rounded-2xl p-6 md:p-10 mb-8 flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden relative">
-         <div className="relative z-10 w-full md:w-1/2">
-            <h1 className="text-3xl md:text-5xl font-bold text-slate-900 mb-2">Shop All Products</h1>
-            <p className="text-slate-600 text-sm md:text-lg mb-6">Explore our wide range of gadgets and accessories.</p>
-            
-            <form 
-              onSubmit={(e) => {
-                e.preventDefault();
-                const form = e.target as HTMLFormElement;
-                const searchInput = form.elements.namedItem('search') as HTMLInputElement;
-                if (searchInput.value.trim()) {
-                  setSearchParams({ search: searchInput.value.trim() });
-                } else {
-                  setSearchParams(new URLSearchParams());
-                }
-              }}
-              className="flex bg-white rounded-lg p-1 shadow-md w-full md:max-w-md overflow-hidden relative"
-            >
-               <input 
-                  type="text" 
-                  name="search"
-                  defaultValue={searchQuery}
-                  placeholder="Search products..." 
-                  className="px-4 py-3 w-full focus:outline-none text-sm border-none" 
-               />
-               <button type="submit" className="bg-primary text-white px-5 rounded-md hover:bg-primary-dark transition-colors flex items-center justify-center">
-                 <Search size={18} />
-               </button>
-            </form>
-         </div>
-         <div className="absolute top-0 right-0 h-full w-1/2 hidden md:block z-0 mix-blend-multiply opacity-20">
-           <img src="https://images.unsplash.com/photo-1550009158-9ebf69173e03?q=80&w=800&auto=format&fit=crop" className="w-full h-full object-cover" alt="Shop Background"/>
-         </div>
-      </div>
-
-      <div className="flex flex-col lg:flex-row gap-8">
+      <div className="flex flex-col lg:flex-row gap-8 mt-4">
         
         {/* Desktop Sidebar */}
         <aside className="hidden lg:block w-64 flex-shrink-0">

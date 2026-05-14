@@ -23,39 +23,38 @@ export default function Home() {
 
   return (
     <div className="pb-20">
-      {/* Hero Section - Compact */}
-      <section className="px-4 mx-auto max-w-7xl pt-4 md:pt-6">
-        <div className="bg-[#f0f2f5] rounded-[2rem] overflow-hidden relative flex items-center h-[400px]">
-          <div className="relative z-10 w-full md:w-1/2 p-8 md:px-16">
+      {/* Hero Section - Compact & Interactive */}
+      <section className="px-4 mx-auto max-w-7xl pt-4 md:pt-6 mb-8">
+        <div className="bg-[#fcf0e4] rounded-[2rem] overflow-hidden relative flex flex-col md:flex-row items-center h-auto md:h-[400px]">
+          <div className="relative z-10 w-full md:w-1/2 p-8 md:px-16 flex flex-col justify-center items-start text-left">
             <motion.h2 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="text-3xl md:text-5xl font-extrabold text-slate-900 mb-4 leading-tight"
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#1a1a1a] mb-8 leading-[1.1] tracking-tight"
             >
-              Grab Upto 50% Off On <br className="hidden md:block"/>Selected Headphone
+              Grab Upto <span className="text-slate-900">50% Off</span> On<br className="hidden md:block"/> Selected Headphone
             </motion.h2>
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="text-slate-600 mb-8 max-w-sm"
-            >
-              Buy the best headphones from ShopMart. The new generation of sound excellence has arrived.
-            </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <Link to="/shop" className="inline-block bg-primary hover:bg-primary-dark transition-colors text-white font-semibold px-8 py-3 rounded-full text-sm">
+              <Link to="/shop" className="inline-block bg-[#003d29] hover:bg-slate-900 transition-colors duration-300 text-white font-medium px-8 py-3.5 rounded-full text-base shadow-sm">
                 Buy Now
               </Link>
             </motion.div>
           </div>
-          <div className="absolute top-0 right-0 w-1/2 h-full hidden md:flex justify-end items-center pointer-events-none">
-             <div className="absolute right-20 w-80 h-80 bg-[#ffeedb] rounded-full mix-blend-multiply opacity-50 blur-3xl"></div>
-             <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1000&auto=format&fit=crop" alt="Headphones" className="relative z-10 h-[120%] max-w-none object-cover transform rotate-[-5deg] mix-blend-darken filter drop-shadow-2xl" />
+          <div className="w-full md:w-1/2 h-full relative flex items-center justify-center p-8 md:p-0">
+             <motion.img 
+               initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
+               animate={{ opacity: 1, scale: 1, rotate: 0 }}
+               transition={{ duration: 0.7, type: "spring", bounce: 0.4 }}
+               whileHover={{ scale: 1.05, rotate: -5 }}
+               src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1000&auto=format&fit=crop" 
+               alt="Headphones" 
+               className="relative z-10 w-full max-w-[320px] md:max-w-[450px] object-cover mix-blend-darken filter drop-shadow-2xl cursor-pointer" 
+             />
           </div>
         </div>
       </section>
@@ -80,20 +79,6 @@ export default function Home() {
             ))}
           </div>
         )}
-      </section>
-
-      {/* Shop By Brands */}
-      <section className="pt-20 px-4 max-w-7xl mx-auto">
-         <div className="mb-10">
-            <h2 className="text-2xl md:text-3xl font-bold text-slate-900">Shop By Brands</h2>
-         </div>
-         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            {brands.slice(0, 10).map((b: any) => (
-               <Link to={`/shop?brand=${b.slug || b.name}`} key={b._id} className="bg-white border border-slate-100 p-6 rounded-2xl shadow-sm text-center font-bold text-slate-700 hover:text-primary hover:border-primary/20 transition-all group flex items-center justify-center">
-                 <span className="group-hover:scale-110 transition-transform">{b.name}</span>
-               </Link>
-            ))}
-         </div>
       </section>
 
       {/* Promotional Banners */}
