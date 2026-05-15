@@ -10,14 +10,33 @@ export default function ProductCard({ product, idx = 0 }: { product: any, idx?: 
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
   const currentPrice = product.discount > 0 ? product.price : product.originalPrice || product.price;
 
+  const colors = product.colors || [
+    { name: 'Black', hex: '#1a1a1a' },
+    { name: 'Silver', hex: '#e2e8f0' },
+    { name: 'Blue', hex: '#3b82f6' }
+  ];
+  const sizes = product.sizes || ['S', 'M', 'L'];
+  
+  const [selectedColor, setSelectedColor] = useState(0);
+  const [selectedSize, setSelectedSize] = useState(0);
+
   const handleAddToCart = (e?: React.MouseEvent) => {
     if (e) e.preventDefault();
+    
+    // If not in quick view, open it to allow selection first
+    if (!isQuickViewOpen && (colors.length > 0 || sizes.length > 0)) {
+      setIsQuickViewOpen(true);
+      return;
+    }
+
     addItem({
        _id: product._id,
        title: product.title,
        price: currentPrice,
        thumbnail: product.thumbnail,
-       quantity: 1
+       quantity: 1,
+       color: colors[selectedColor]?.name,
+       size: sizes[selectedSize]
     });
     toast.success(`${product.title} added to cart!`);
     setIsQuickViewOpen(false);
@@ -25,12 +44,8 @@ export default function ProductCard({ product, idx = 0 }: { product: any, idx?: 
 
   return (
     <>
-      <motion.div 
-      initial={{ opacity: 0, y: 15 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ delay: idx * 0.05 }}
-      viewport={{ once: true, margin: "-50px" }}
-      className="group flex flex-col bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden relative border border-slate-100/60"
+      <div 
+      className="group flex flex-col bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden relative border border-slate-200"
     >
       {product.discount > 0 && (
           <div className="absolute top-4 left-4 z-10 bg-black text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md">
@@ -87,7 +102,7 @@ export default function ProductCard({ product, idx = 0 }: { product: any, idx?: 
           </button>
         </div>
       </div>
-    </motion.div>
+    </div>
 
       {/* Quick View Modal */}
       <AnimatePresence>
@@ -131,6 +146,43 @@ export default function ProductCard({ product, idx = 0 }: { product: any, idx?: 
                    <p className="text-slate-600 mb-6 leading-relaxed flex-1 line-clamp-4">
                       {product.shortDescription || product.description}
                    </p>
+
+                   {/* Variants Selection */}
+                   <div className="mb-6 space-y-4">
+                     {colors && colors.length > 0 && (
+                       <div>
+                         <h4 className="text-sm font-bold text-slate-900 mb-2">Color: <span className="text-slate-500 font-medium">{colors[selectedColor]?.name}</span></h4>
+                         <div className="flex gap-2 relative z-20">
+                           {colors.map((color: any, i: number) => (
+                             <button
+                               key={i}
+                               onClick={(e) => { e.preventDefault(); e.stopPropagation(); setSelectedColor(i); }}
+                               className={`w-8 h-8 rounded-full border-2 focus:outline-none transition-all ${selectedColor === i ? 'border-primary scale-110' : 'border-transparent shadow-sm hover:scale-105'}`}
+                               style={{ backgroundColor: color.hex }}
+                               title={color.name}
+                             />
+                           ))}
+                         </div>
+                       </div>
+                     )}
+
+                     {sizes && sizes.length > 0 && (
+                       <div>
+                         <h4 className="text-sm font-bold text-slate-900 mb-2">Size: <span className="text-slate-500 font-medium">{sizes[selectedSize]}</span></h4>
+                         <div className="flex gap-2 relative z-20">
+                           {sizes.map((size: string, i: number) => (
+                             <button
+                               key={i}
+                               onClick={(e) => { e.preventDefault(); e.stopPropagation(); setSelectedSize(i); }}
+                               className={`min-w-10 h-10 px-3 rounded-lg border font-medium focus:outline-none transition-all flex items-center justify-center text-sm ${selectedSize === i ? 'border-primary bg-primary/5 text-primary' : 'border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50'}`}
+                             >
+                               {size}
+                             </button>
+                           ))}
+                         </div>
+                       </div>
+                     )}
+                   </div>
                    
                    <div className="flex items-end gap-3 mb-8">
                       <span className="text-3xl font-bold text-slate-900">${currentPrice.toFixed(2)}</span>

@@ -15,7 +15,7 @@ export default function Home() {
       fetch('/api/products?limit=12').then(res => res.json()),
       fetch('/api/brands').then(res => res.json())
     ]).then(([productsData, brandsData]) => {
-      setProducts(productsData.docs || productsData);
+      setProducts(Array.isArray(productsData) ? productsData : (productsData?.docs || []));
       setBrands(brandsData);
       setLoading(false);
     });

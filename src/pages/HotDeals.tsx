@@ -13,7 +13,7 @@ export default function HotDeals() {
       .then(res => res.json())
       .then(data => {
         // filter or simulate deals
-        const items = data.docs || data;
+        const items = Array.isArray(data) ? data : (data?.docs || []);
         setProducts(items);
         setLoading(false);
       });

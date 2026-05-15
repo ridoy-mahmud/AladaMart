@@ -27,29 +27,38 @@ export default function Cart() {
       
       <div className="grid lg:grid-cols-3 gap-10">
         <div className="lg:col-span-2 space-y-6">
-          {items.map((item) => (
-             <div key={item._id} className="flex flex-col sm:flex-row items-center gap-6 p-4 bg-white rounded-xl shadow-sm border border-slate-100 relative">
-               <img src={item.thumbnail} alt={item.title} className="w-24 h-24 object-contain rounded-md bg-slate-50" />
-               <div className="flex-1 text-center sm:text-left">
-                  <Link to={`/product/${item._id}`} className="font-semibold text-lg hover:text-primary transition-colors text-slate-900">{item.title}</Link>
-                  <p className="text-primary font-bold mt-1">${item.price.toFixed(2)}</p>
-               </div>
-               
-               <div className="flex items-center gap-3 bg-white rounded-lg p-1 border border-slate-200">
-                 <button onClick={() => updateQuantity(item._id, item.quantity - 1)} className="p-1 hover:bg-slate-50 rounded transition-colors text-slate-600"><Minus size={18} /></button>
-                 <span className="w-8 text-center font-medium text-slate-900">{item.quantity}</span>
-                 <button onClick={() => updateQuantity(item._id, item.quantity + 1)} className="p-1 hover:bg-slate-50 rounded transition-colors text-slate-600"><Plus size={18} /></button>
-               </div>
-               
-               <div className="font-bold text-lg w-24 text-right hidden sm:block text-slate-900">
-                  ${(item.price * item.quantity).toFixed(2)}
-               </div>
+          {items.map((item) => {
+             const uniqueId = (item as any).cartItemId || item._id;
+             return (
+               <div key={uniqueId} className="flex flex-col sm:flex-row items-center gap-6 p-4 bg-white rounded-xl shadow-sm border border-slate-100 relative">
+                 <img src={item.thumbnail} alt={item.title} className="w-24 h-24 object-contain rounded-md bg-slate-50" />
+                 <div className="flex-1 text-center sm:text-left">
+                    <Link to={`/product/${item._id}`} className="font-semibold text-lg hover:text-primary transition-colors text-slate-900">{item.title}</Link>
+                    {(item.color || item.size) && (
+                      <p className="text-sm text-slate-500 mt-0.5 space-x-2">
+                        {item.color && <span>Color: <span className="font-medium text-slate-700">{item.color}</span></span>}
+                        {item.size && <span>Size: <span className="font-medium text-slate-700">{item.size}</span></span>}
+                      </p>
+                    )}
+                    <p className="text-primary font-bold mt-1">${item.price.toFixed(2)}</p>
+                 </div>
+                 
+                 <div className="flex items-center gap-3 bg-white rounded-lg p-1 border border-slate-200">
+                   <button onClick={() => updateQuantity(uniqueId, item.quantity - 1)} className="p-1 hover:bg-slate-50 rounded transition-colors text-slate-600"><Minus size={18} /></button>
+                   <span className="w-8 text-center font-medium text-slate-900">{item.quantity}</span>
+                   <button onClick={() => updateQuantity(uniqueId, item.quantity + 1)} className="p-1 hover:bg-slate-50 rounded transition-colors text-slate-600"><Plus size={18} /></button>
+                 </div>
+                 
+                 <div className="font-bold text-lg w-24 text-right hidden sm:block text-slate-900">
+                    ${(item.price * item.quantity).toFixed(2)}
+                 </div>
 
-               <button onClick={() => removeItem(item._id)} className="absolute top-4 right-4 text-slate-400 hover:text-danger transition-colors p-2 sm:p-0 sm:relative sm:top-auto sm:right-auto">
-                 <Trash2 size={20} />
-               </button>
-             </div>
-          ))}
+                 <button onClick={() => removeItem(uniqueId)} className="absolute top-4 right-4 text-slate-400 hover:text-danger transition-colors p-2 sm:p-0 sm:relative sm:top-auto sm:right-auto">
+                   <Trash2 size={20} />
+                 </button>
+               </div>
+             );
+          })}
         </div>
         
         <div>

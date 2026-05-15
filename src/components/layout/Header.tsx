@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { ShoppingCart, Heart, User, Menu, X, Package2, Phone, ChevronDown, LogOut, Smartphone, Laptop, Tablet, Headphones, Watch, Monitor, Camera, Speaker, Search } from 'lucide-react';
+import { ShoppingCart, Heart, User, Menu, X, Package2, Phone, ChevronDown, LogOut, Smartphone, Laptop, Tablet, Headphones, Watch, Monitor, Camera, Speaker, Search, LayoutDashboard } from 'lucide-react';
+import Logo from '../Logo';
 import { cn } from '../../lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCartStore } from '../../store/useCartStore';
@@ -109,8 +110,8 @@ export default function Header() {
       <div className="w-full sm:w-[95%] md:w-[90%] lg:w-[85%] mx-auto px-4 sm:px-0 py-4 sm:py-5 flex items-center justify-between gap-4 lg:gap-8 bg-transparent">
         
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 flex-shrink-0">
-          <span className="text-2xl font-black tracking-tighter text-[#0b4d2c] uppercase">Shopcar<span className="text-[#34a853]">t</span></span>
+        <Link to="/" className="flex items-center flex-shrink-0">
+          <Logo />
         </Link>
 
         {/* Navigation & Search (Desktop) */}
@@ -190,6 +191,11 @@ export default function Header() {
                     <p className="text-xs text-slate-500 truncate">{user.email}</p>
                   </div>
                   <div className="p-2">
+                    {(user.email === 'mahamulhasan38@gmail.com' || user.email === 'ridoymahmud678@gmail.com') && (
+                      <Link to="/admin/dashboard" className="flex items-center gap-2 px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 rounded-lg">
+                        <LayoutDashboard size={16} /> Admin Dashboard
+                      </Link>
+                    )}
                     <Link to="/account/wishlist" className="flex items-center gap-2 px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 rounded-lg">
                       <Heart size={16} /> Wishlist
                     </Link>
@@ -235,8 +241,8 @@ export default function Header() {
             className="fixed inset-0 z-50 bg-white flex flex-col overflow-y-auto"
           >
             <div className="p-4 bg-slate-100 flex items-center justify-between border-b">
-               <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-2">
-                 <span className="text-xl font-black tracking-tighter text-[#0b4d2c] uppercase">Shopcar<span className="text-[#34a853]">t</span></span>
+               <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center">
+                 <Logo />
                </Link>
                <button onClick={() => setIsMobileMenuOpen(false)} className="bg-white p-1 rounded-md shadow-sm text-slate-600"><X size={24} /></button>
             </div>

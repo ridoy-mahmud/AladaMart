@@ -29,18 +29,23 @@ export const useCartStore = create<CartStore>()(
         if (existingItem) {
           return {
             items: state.items.map(i => 
-              i._id === item._id ? { ...i, quantity: i.quantity + (item.quantity || 1) } : i
+              (i._id === item._id && i.color === item.color && i.size === item.size) 
+                ? { ...i, quantity: i.quantity + (item.quantity || 1) } 
+                : i
             )
           };
         }
-        return { items: [...state.items, { ...item, quantity: item.quantity || 1 }] };
+        return { items: [...state.items, { ...item, quantity: item.quantity || 1, cartItemId: `${item._id}-${item.color || 'none'}-${item.size || 'none'}` }] };
       }),
       removeItem: (id) => set((state) => ({
-        items: state.items.filter(i => i._id !== id)
+        // Support both simple id filtering and composite cartItemId
+        items: state.items.filter(i => (i as any).cartItemId ? (i as any).cartItemId !== id : i._id !== id)
       })),
       updateQuantity: (id, quantity) => set((state) => ({
         items: state.items.map(i => 
-          i._id === id ? { ...i, quantity: Math.max(1, quantity) } : i
+          ((i as any).cartItemId ? (i as any).cartItemId === id : i._id === id) 
+            ? { ...i, quantity: Math.max(1, quantity) } 
+            : i
         )
       })),
       clearCart: () => set({ items: [] }),

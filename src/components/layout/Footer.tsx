@@ -1,6 +1,7 @@
 import React from 'react';
 import { Package2, Mail, Phone, MapPin, Facebook, Twitter, Instagram, Youtube, ArrowRight, Clock, Github, Linkedin } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import Logo from '../Logo';
 
 export default function Footer() {
   return (
@@ -42,7 +43,7 @@ export default function Footer() {
             </div>
             <div>
               <p className="text-sm font-semibold text-slate-900">Email Us</p>
-              <p className="text-xs text-slate-500">Shopcart@gmail.com</p>
+              <p className="text-xs text-slate-500">aladamart@gmail.com</p>
             </div>
           </div>
         </div>
@@ -51,11 +52,11 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
           
           <div className="lg:pr-8">
-            <Link to="/" className="flex items-center gap-2 mb-4 inline-flex group">
-              <span className="text-2xl font-black tracking-tighter text-[#0b4d2c] uppercase group-hover:scale-105 transition-transform origin-left">Shopcar<span className="text-[#34a853]">t</span></span>
+            <Link to="/" className="inline-block mb-4">
+               <Logo />
             </Link>
             <p className="text-sm text-slate-500 leading-relaxed mb-6">
-              Discover curated furniture collections at Shopcart, blending style and comfort to elevate your living spaces.
+              Discover curated furniture and electronics collections at AladaMart, blending style and comfort to elevate your living spaces.
             </p>
             <div className="flex gap-2">
                <a href="#" className="w-9 h-9 rounded-full bg-slate-50 text-slate-500 flex items-center justify-center hover:bg-red-50 hover:text-red-600 transition-all hover:scale-110"><Youtube size={16} /></a>
@@ -81,7 +82,7 @@ export default function Footer() {
         
         {/* Copyright */}
         <div className="border-t border-slate-100 mt-8 pt-6 flex flex-col md:flex-row items-center justify-between text-xs text-slate-400">
-           <p>© {new Date().getFullYear()} <span className="font-bold text-slate-900 uppercase tracking-wide">Shopcart</span>. All rights reserved.</p>
+           <p>© {new Date().getFullYear()} <span className="font-bold text-slate-900 uppercase tracking-wide">AladaMart</span>. All rights reserved.</p>
            <div className="flex gap-4 mt-4 md:mt-0">
              <Link to="/terms" className="hover:text-slate-900 transition-colors">Terms of Service</Link>
              <Link to="/privacy" className="hover:text-slate-900 transition-colors">Privacy Policy</Link>

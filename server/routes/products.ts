@@ -43,4 +43,44 @@ router.get('/:slug', async (req, res) => {
   }
 });
 
+// POST new product
+router.post('/', async (req, res) => {
+  try {
+    const product = new Product(req.body);
+    await product.save();
+    res.status(201).json(product);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to create product' });
+  }
+});
+
+// PUT update product
+router.put('/:id', async (req, res) => {
+  try {
+    const product = await (Product as any).findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!product) {
+      res.status(404).json({ error: 'Product not found' });
+      return;
+    }
+    res.json(product);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update product' });
+  }
+});
+
+// DELETE product
+router.delete('/:id', async (req, res) => {
+  try {
+    const product = await (Product as any).findByIdAndDelete(req.params.id);
+    if (!product) {
+      res.status(404).json({ error: 'Product not found' });
+      return;
+    }
+    res.json({ message: 'Product deleted' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete product' });
+  }
+});
+
 export default router;

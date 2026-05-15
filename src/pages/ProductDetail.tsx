@@ -14,6 +14,15 @@ export default function ProductDetail() {
   const [activeImage, setActiveImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState(0);
+  const [selectedSize, setSelectedSize] = useState(0);
+
+  const colors = product?.colors || [
+    { name: 'Black', hex: '#1a1a1a' },
+    { name: 'Silver', hex: '#e2e8f0' },
+    { name: 'Blue', hex: '#3b82f6' }
+  ];
+  const sizes = product?.sizes || ['S', 'M', 'L'];
+  
   const [activeTab, setActiveTab] = useState('description');
   const addItem = useCartStore(state => state.addItem);
 
@@ -31,7 +40,8 @@ export default function ProductDetail() {
              const relRes = await fetch(`/api/products?limit=5`); 
              if (relRes.ok) {
                 const relData = await relRes.json();
-                setRelatedProducts((relData.docs || relData).filter((p:any) => p._id !== data._id).slice(0, 4));
+                const items = Array.isArray(relData) ? relData : (relData?.docs || []);
+                setRelatedProducts(items.filter((p:any) => p._id !== data._id).slice(0, 4));
              }
           }
         }
@@ -70,7 +80,9 @@ export default function ProductDetail() {
       title: product.title,
       price: currentPrice,
       thumbnail: product.thumbnail,
-      quantity
+      quantity,
+      color: colors[selectedColor]?.name,
+      size: sizes[selectedSize]
     });
     toast.success(`${quantity} ${product.title} added to cart!`);
   };
@@ -144,6 +156,43 @@ export default function ProductDetail() {
           <div className="flex items-center gap-2 text-[#5c6e82] text-[15px] mb-8 pb-1">
              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-80"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
              <span>Save {product.discount > 0 ? product.discount : 84}% right now</span>
+          </div>
+
+          {/* Variants Selection */}
+          <div className="mb-8 space-y-5">
+            {colors && colors.length > 0 && (
+              <div>
+                <h4 className="text-[15px] font-bold text-slate-900 mb-3">Color: <span className="text-slate-500 font-medium ml-1">{colors[selectedColor]?.name}</span></h4>
+                <div className="flex gap-3">
+                  {colors.map((color: any, i: number) => (
+                    <button
+                      key={i}
+                      onClick={(e) => { e.preventDefault(); setSelectedColor(i); }}
+                      className={`w-10 h-10 rounded-full border-2 focus:outline-none transition-all ${selectedColor === i ? 'border-[#00b252] scale-110 shadow-md' : 'border-slate-200 hover:scale-105 shadow-sm'}`}
+                      style={{ backgroundColor: color.hex }}
+                      title={color.name}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {sizes && sizes.length > 0 && (
+              <div>
+                <h4 className="text-[15px] font-bold text-slate-900 mb-3">Size: <span className="text-slate-500 font-medium ml-1">{sizes[selectedSize]}</span></h4>
+                <div className="flex flex-wrap gap-3">
+                  {sizes.map((size: string, i: number) => (
+                    <button
+                      key={i}
+                      onClick={(e) => { e.preventDefault(); setSelectedSize(i); }}
+                      className={`min-w-12 h-11 px-4 rounded-lg border font-bold focus:outline-none transition-all flex items-center justify-center text-[15px] ${selectedSize === i ? 'border-[#00b252] bg-[#f0fdf4] text-[#00b252] ring-1 ring-[#00b252]' : 'border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50'}`}
+                    >
+                      {size}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
           
           {/* Actions */}

@@ -42,7 +42,7 @@ export default function Shop() {
         ]);
         
         const prods = await prodRes.json();
-        setProducts(prods.docs || prods);
+        setProducts(Array.isArray(prods) ? prods : (prods?.docs || []));
         
         setCategories(catRes.ok ? await catRes.json() : []);
         setBrands(brandRes.ok ? await brandRes.json() : []);
