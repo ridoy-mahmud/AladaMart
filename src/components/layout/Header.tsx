@@ -48,7 +48,7 @@ export default function Header() {
         try {
           const res = await fetch(`/api/products?search=${encodeURIComponent(searchQuery.trim())}&limit=5`);
           const data = await res.json();
-          setSearchResults(data.products || []);
+          setSearchResults(Array.isArray(data) ? data : (data.products || []));
           setIsSearchOpen(true);
         } catch (err) {
           console.error(err);
@@ -114,14 +114,17 @@ export default function Header() {
           <Logo />
         </Link>
 
-        {/* Navigation & Search (Desktop) */}
-        <div className="hidden md:flex items-center gap-6 flex-1 justify-start ml-12 lg:ml-20 max-w-3xl">
-           <nav className="flex items-center gap-6 flex-shrink-0">
+        {/* Navigation (Desktop) */}
+        <div className="hidden md:flex items-center justify-center flex-1 max-w-3xl">
+           <nav className="flex items-center gap-6 lg:gap-8 flex-shrink-0">
              <NavLinks />
            </nav>
-           
+        </div>
+
+        {/* Right Section: Search & Icons */}
+        <div className="flex items-center gap-4 sm:gap-6 flex-shrink-0">
            {/* Search */}
-           <div className="relative flex-1 max-w-[240px] ml-4" ref={searchRef}>
+           <div className="relative hidden md:block w-[180px] lg:w-[240px]" ref={searchRef}>
               <form onSubmit={handleSearchSubmit} className="relative w-full">
                  <input 
                    type="text" 
@@ -138,48 +141,54 @@ export default function Header() {
               
               {/* Search Suggestions Dropdown */}
               <AnimatePresence>
-                {isSearchOpen && searchResults.length > 0 && (
+                {isSearchOpen && searchQuery.trim().length > 1 && (
                   <motion.div 
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl border border-slate-100 overflow-hidden z-50 p-2 flex flex-col gap-1 max-h-[400px] overflow-y-auto"
+                    className="absolute top-full right-0 mt-2 w-[300px] bg-white rounded-xl shadow-xl border border-slate-100 overflow-hidden z-50 p-2 flex flex-col gap-1 max-h-[400px] overflow-y-auto"
                   >
                     <div className="px-3 py-1.5 text-xs font-bold text-slate-400 uppercase tracking-wider">Products</div>
-                    {searchResults.map((product) => (
-                       <Link 
-                         key={product._id} 
-                         to={`/product/${product.slug}`}
-                         onClick={() => { setIsSearchOpen(false); setSearchQuery(''); }}
-                         className="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg transition-colors"
-                       >
-                          <div className="w-10 h-10 bg-slate-50 rounded-md p-1 flex-shrink-0 border border-slate-100">
-                             <img src={product.thumbnail} alt={product.title} className="w-full h-full object-contain mix-blend-multiply" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                             <h5 className="text-sm font-medium text-slate-800 truncate">{product.title}</h5>
-                             <div className="flex items-center gap-2 mt-0.5">
-                                <span className="text-xs font-bold text-slate-900">${(product.discount > 0 ? product.price : (product.originalPrice || product.price)).toFixed(2)}</span>
-                                {product.discount > 0 && <span className="text-[10px] text-slate-400 line-through">${product.originalPrice?.toFixed(2)}</span>}
-                             </div>
-                          </div>
-                       </Link>
-                    ))}
-                    <button 
-                      onClick={handleSearchSubmit} 
-                      className="mt-1 w-full py-2 text-sm text-center text-primary font-medium hover:bg-primary/5 rounded-lg transition-colors border-t border-slate-100"
-                    >
-                      View all results for "{searchQuery}"
-                    </button>
+                    {searchResults.length > 0 ? (
+                      <>
+                        {searchResults.map((product) => (
+                           <Link 
+                             key={product._id} 
+                             to={`/product/${product.slug}`}
+                             onClick={() => { setIsSearchOpen(false); setSearchQuery(''); }}
+                             className="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg transition-colors"
+                           >
+                              <div className="w-10 h-10 bg-slate-50 rounded-md p-1 flex-shrink-0 border border-slate-100">
+                                 <img src={product.thumbnail} alt={product.title} className="w-full h-full object-contain mix-blend-multiply" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                 <h5 className="text-sm font-medium text-slate-800 truncate">{product.title}</h5>
+                                 <div className="flex items-center gap-2 mt-0.5">
+                                    <span className="text-xs font-bold text-slate-900">${(product.discount > 0 && product.originalPrice ? product.price : (product.originalPrice || product.price)).toFixed(2)}</span>
+                                    {product.discount > 0 && product.originalPrice && <span className="text-[10px] text-slate-400 line-through">${product.originalPrice?.toFixed(2)}</span>}
+                                 </div>
+                              </div>
+                           </Link>
+                        ))}
+                        <button 
+                          onClick={handleSearchSubmit} 
+                          className="mt-1 w-full py-2 text-sm text-center text-primary font-medium hover:bg-primary/5 rounded-lg transition-colors border-t border-slate-100"
+                        >
+                          View all results for "{searchQuery}"
+                        </button>
+                      </>
+                    ) : (
+                      <div className="px-3 py-4 text-sm text-slate-500 text-center">
+                        No products found.
+                      </div>
+                    )}
                   </motion.div>
                 )}
               </AnimatePresence>
            </div>
-        </div>
 
-        {/* Icons */}
-        <div className="flex items-center gap-5 sm:gap-6 flex-shrink-0">
+           {/* User / Cart / Mobile Toggle */}
           {user ? (
             <div className="relative group hidden sm:block">
                <button className="flex items-center gap-2 text-slate-700 hover:text-primary transition-colors">

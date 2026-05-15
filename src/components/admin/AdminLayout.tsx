@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation, Navigate } from 'react-router-dom';
-import { LayoutDashboard, ShoppingBag, Users, Settings, LogOut, Search, Bell, ShoppingCart } from 'lucide-react';
+import { LayoutDashboard, ShoppingBag, Users, Settings, LogOut, Search, Bell, ShoppingCart, FileText } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Logo from '../Logo';
 
@@ -18,6 +18,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: 'Products', path: '/admin/products', icon: <ShoppingBag size={20} /> },
     { name: 'Orders', path: '/admin/orders', icon: <ShoppingCart size={20} /> },
     { name: 'Customers', path: '/admin/customers', icon: <Users size={20} /> },
+    { name: 'Blogs', path: '/admin/blogs', icon: <FileText size={20} /> },
     { name: 'Settings', path: '/admin/settings', icon: <Settings size={20} /> },
   ];
 

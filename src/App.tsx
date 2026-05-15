@@ -11,11 +11,14 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Wishlist from './pages/Wishlist';
 import HotDeals from './pages/HotDeals';
+import Blog from './pages/Blog';
+import BlogPost from './pages/BlogPost';
 import Dashboard from './pages/admin/Dashboard';
 import AdminProducts from './pages/admin/Products';
 import AdminCustomers from './pages/admin/Customers';
 import AdminSettings from './pages/admin/Settings';
 import AdminOrders from './pages/admin/Orders';
+import AdminBlogs from './pages/admin/Blogs';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './context/AuthContext';
 
@@ -40,6 +43,8 @@ export default function App() {
             <Route index element={<Home />} />
             <Route path="shop" element={<Shop />} />
             <Route path="deal" element={<HotDeals />} />
+            <Route path="blog" element={<Blog />} />
+            <Route path="blog/:slug" element={<BlogPost />} />
             <Route path="product/:slug" element={<ProductDetail />} />
             <Route path="cart" element={<Cart />} />
             <Route path="checkout" element={<Checkout />} />
@@ -52,9 +57,10 @@ export default function App() {
           
           <Route path="/admin/dashboard" element={<Dashboard />} />
           <Route path="/admin/products" element={<AdminProducts />} />
-          <Route path="/admin/customers" element={<AdminCustomers />} />
-          <Route path="/admin/settings" element={<AdminSettings />} />
           <Route path="/admin/orders" element={<AdminOrders />} />
+          <Route path="/admin/customers" element={<AdminCustomers />} />
+          <Route path="/admin/blogs" element={<AdminBlogs />} />
+          <Route path="/admin/settings" element={<AdminSettings />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

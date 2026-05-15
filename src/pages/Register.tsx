@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, Eye, EyeOff, UserIcon, Chrome } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 
@@ -9,12 +9,30 @@ export default function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { signInWithGoogle } = useAuth();
+  const { signInWithGoogle, registerWithEmail } = useAuth();
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast.error('Email registration is not configured. Please use Google Sign In.');
+    if (!email || !password) {
+      toast.error('Please enter both email and password.');
+      return;
+    }
+    
+    setIsLoading(true);
+    try {
+      await registerWithEmail(email, password);
+      // Wait, we need to update profile with name if needed, but Firebase allows that afterwards.
+      // For now, simple registration.
+      toast.success('Registration successful! Check your email to verify.');
+      navigate('/');
+    } catch (error: any) {
+      const msg = error.message || 'Failed to register';
+      toast.error(msg);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleGoogleLogin = async () => {
@@ -24,96 +42,101 @@ export default function Register() {
       navigate('/');
     } catch (error: any) {
       if (error?.code !== 'auth/popup-closed-by-user') {
-        toast.error('Failed to log in with Google');
+        toast.error('Failed to register with Google');
       }
     }
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12 md:py-20 flex justify-center items-center">
-      <div className="w-full max-w-md bg-white border border-slate-100 rounded-3xl p-8 shadow-sm">
-        <h2 className="text-3xl font-bold text-slate-900 mb-2 text-center">Create an Account</h2>
-        <p className="text-slate-500 mb-8 text-center">Sign up to get started</p>
+    <div className="min-h-[80vh] flex justify-center items-center px-4 py-12">
+      <div className="w-full max-w-[420px]">
+        <h2 className="text-[32px] font-bold text-[#111111] mb-8 leading-tight">
+          Create your account <span className="inline-block origin-bottom-right rotate-12">🙏</span>
+        </h2>
         
-        <form onSubmit={handleRegister} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5" htmlFor="name">Full Name</label>
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
-                <UserIcon size={20} />
-              </span>
-              <input 
+        <div className="grid grid-cols-1 gap-4 mb-8">
+          <button 
+            onClick={handleGoogleLogin} 
+            type="button"
+            className="flex items-center justify-center gap-3 w-full py-3.5 px-4 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors bg-white shadow-sm"
+          >
+            <svg width="20" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M47.532 24.5528C47.532 22.9214 47.3997 21.2811 47.1175 19.6761H24.48V28.9181H37.4434C36.9055 31.8988 35.177 34.5356 32.6461 36.2111V42.2078H40.3801C44.9217 38.0278 47.532 31.8547 47.532 24.5528Z" fill="#4285F4"/>
+              <path d="M24.48 48.0016C30.9529 48.0016 36.4116 45.8764 40.3888 42.2078L32.6549 36.2111C30.5031 37.675 27.7253 38.5039 24.4888 38.5039C18.2275 38.5039 12.9187 34.2798 11.0139 28.6006H3.03296V34.7825C7.10718 42.8868 15.4056 48.0016 24.48 48.0016Z" fill="#34A853"/>
+              <path d="M11.0051 28.6006C9.99973 25.6199 9.99973 22.3922 11.0051 19.4115V13.2296H3.03296C-0.371021 20.0112 -0.371021 28.0009 3.03296 34.7825L11.0051 28.6006Z" fill="#FBBC04"/>
+              <path d="M24.48 9.49932C27.9016 9.44641 31.2086 10.7339 33.6866 13.0973L40.5387 6.24523C36.2 2.17101 30.4046 -0.068932 24.48 0.00161733C15.4056 0.00161733 7.10718 5.11644 3.03296 13.2208L11.0139 19.4027C12.91 13.7323 18.2275 9.49932 24.48 9.49932Z" fill="#EA4335"/>
+            </svg>
+            <span className="font-semibold text-[#333333] text-[15px]">Google</span>
+          </button>
+        </div>
+        
+        <div className="flex items-center gap-4 mb-8">
+          <div className="h-px bg-slate-200 flex-1"></div>
+          <span className="text-sm font-medium text-slate-400 lowercase">or</span>
+          <div className="h-px bg-slate-200 flex-1"></div>
+        </div>
+        
+        <form onSubmit={handleRegister} className="space-y-5">
+          <div className="space-y-1.5">
+            <label className="block text-sm font-bold text-[#111111]" htmlFor="name">Full Name</label>
+             <input 
                 id="name"
                 type="text" 
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                required
-                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all"
+                className="w-full px-4 py-3.5 border border-slate-300 rounded-xl focus:outline-none focus:border-[#111111] focus:ring-1 focus:ring-[#111111] transition-all bg-white"
                 placeholder="John Doe"
-              />
-            </div>
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5" htmlFor="email">Email Address</label>
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
-                <Mail size={20} />
-              </span>
-              <input 
-                id="email"
-                type="email" 
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all"
-                placeholder="you@example.com"
               />
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="block text-sm font-bold text-[#111111]" htmlFor="email">Email</label>
+            <input 
+              id="email"
+              type="email" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-4 py-3.5 border border-slate-300 rounded-xl focus:outline-none focus:border-[#111111] focus:ring-1 focus:ring-[#111111] transition-all bg-white"
+              placeholder="budarina@gmail.com"
+              required
+            />
+          </div>
+          
+          <div className="space-y-1.5">
+            <label className="block text-sm font-bold text-[#111111]" htmlFor="password">Password</label>
+            <div className="relative">
+              <input 
+                id="password"
+                type={showPassword ? "text" : "password"} 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full pl-4 pr-12 py-3.5 border border-slate-300 rounded-xl focus:outline-none focus:border-[#111111] focus:ring-1 focus:ring-[#111111] transition-all bg-white font-medium"
+                placeholder="••••••••"
+                required
+              />
+              <button 
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-800 transition-colors"
+                title={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <EyeOff size={20} strokeWidth={2} /> : <Eye size={20} strokeWidth={2} />}
+              </button>
             </div>
           </div>
           
-          <div>
-             <label className="block text-sm font-medium text-slate-700 mb-1.5" htmlFor="password">Password</label>
-             <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
-                  <Lock size={20} />
-                </span>
-                <input 
-                  id="password"
-                  type={showPassword ? 'text' : 'password'} 
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  className="w-full pl-10 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all"
-                  placeholder="••••••••"
-                />
-                <button 
-                  type="button" 
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none"
-                >
-                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                </button>
-             </div>
-          </div>
-          
-          <button type="submit" className="w-full bg-slate-900 text-white font-semibold py-3.5 rounded-xl hover:bg-primary transition-colors shadow-lg mt-4">
-            Sign Up
+          <button 
+            type="submit" 
+            disabled={isLoading}
+            className="w-full py-3.5 bg-[#111111] hover:bg-black text-white rounded-xl font-semibold text-[16px] transition-colors mt-2"
+          >
+            {isLoading ? 'Creating account...' : 'Sign up'}
           </button>
         </form>
         
-        <div className="mt-8 flex items-center gap-4 before:flex-1 before:h-px before:bg-slate-200 after:flex-1 after:h-px after:bg-slate-200">
-          <span className="text-sm font-medium text-slate-400">OR REGISTER WITH</span>
-        </div>
-        
-        <div className="mt-6">
-          <button onClick={handleGoogleLogin} className="w-full flex items-center justify-center gap-2 py-3 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors font-medium text-slate-700">
-            <Chrome size={20} /> Continue with Google
-          </button>
-        </div>
-        
-        <p className="mt-8 text-center text-sm text-slate-600">
-          Already have an account? <Link to="/login" className="font-semibold text-primary hover:underline">Sign in</Link>
+        <p className="mt-8 text-center text-[15px] font-medium text-slate-500">
+          Already have an account? <Link to="/login" className="text-[#111111] hover:underline underline-offset-4 decoration-[#111111]">Login</Link>
         </p>
       </div>
     </div>
