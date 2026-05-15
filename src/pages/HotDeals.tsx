@@ -21,9 +21,9 @@ export default function HotDeals() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
-      <div className="bg-red-50 border border-red-100 rounded-3xl p-8 md:p-12 mb-12 text-center">
-        <h1 className="text-4xl md:text-5xl font-bold text-red-600 mb-4">🔥 Hot Deals</h1>
-        <p className="text-red-500 max-w-2xl mx-auto text-lg">Save big on our weekly specials. Hurry up before they run out!</p>
+      <div className="bg-red-50 border border-red-100 rounded-2xl p-6 md:p-8 mb-8 text-center max-w-3xl mx-auto">
+        <h1 className="text-3xl md:text-4xl font-bold text-red-600 mb-3">🔥 Hot Deals</h1>
+        <p className="text-red-500 text-base md:text-md">Save big on our weekly specials. Hurry up before they run out!</p>
       </div>
 
       <div className="mb-10">
@@ -35,7 +35,7 @@ export default function HotDeals() {
            <Loader text="Loading deals..." />
          </div>
       ) : (
-         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
             {products.map((p: any, i: number) => (
               <ProductCard key={p._id} product={p} idx={i} />
             ))}

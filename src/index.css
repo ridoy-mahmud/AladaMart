@@ -9,10 +9,19 @@
   --color-secondary: #F59E0B;
   --color-accent: #10B981;
   --color-danger: #EF4444;
+  --animate-marquee: marquee 45s linear infinite;
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
 }
 
 @layer base {
   body {
-    @apply font-sans antialiased bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-50;
+    @apply font-sans antialiased bg-white text-slate-900;
   }
 }

@@ -37,11 +37,11 @@ export default function Cart() {
                
                <div className="flex items-center gap-3 bg-white rounded-lg p-1 border border-slate-200">
                  <button onClick={() => updateQuantity(item._id, item.quantity - 1)} className="p-1 hover:bg-slate-50 rounded transition-colors text-slate-600"><Minus size={18} /></button>
-                 <span className="w-8 text-center font-medium">{item.quantity}</span>
+                 <span className="w-8 text-center font-medium text-slate-900">{item.quantity}</span>
                  <button onClick={() => updateQuantity(item._id, item.quantity + 1)} className="p-1 hover:bg-slate-50 rounded transition-colors text-slate-600"><Plus size={18} /></button>
                </div>
                
-               <div className="font-bold text-lg w-20 text-right hidden sm:block">
+               <div className="font-bold text-lg w-24 text-right hidden sm:block text-slate-900">
                   ${(item.price * item.quantity).toFixed(2)}
                </div>
 

@@ -81,18 +81,31 @@ export default function ProductDetail() {
       <nav className="flex text-sm text-slate-500 mb-8 gap-2">
          <Link to="/" className="hover:text-primary transition-colors">Home</Link>
          <span>/</span>
-         <Link to="/shop" className="hover:text-primary transition-colors">Shop</Link>
+         <Link to="/shop" className="hover:text-primary transition-colors">Products</Link>
          <span>/</span>
-         <span className="text-slate-900 font-medium truncate">{product.title}</span>
+         <span className="text-slate-900 font-medium truncate">{product.categoryName || 'Watch'}</span>
       </nav>
 
-      <div className="flex flex-col lg:flex-row gap-10 xl:gap-16 mb-16">
+      <div className="flex flex-col lg:flex-row gap-8 xl:gap-20 mb-16">
         {/* Image Gallery */}
-        <div className="w-full lg:w-1/2 flex flex-col gap-4">
+        <div className="w-full lg:w-[42%] flex flex-row gap-5 h-[400px] xl:h-[480px]">
+           {/* Thumbs */}
+           <div className="flex flex-col gap-4 overflow-y-auto no-scrollbar w-[88px] flex-shrink-0">
+             {images.slice(0, 4).map((img: string, idx: number) => (
+               <button 
+                 key={idx}
+                 onClick={() => setActiveImage(idx)}
+                 className={`w-[88px] h-[88px] rounded-xl overflow-hidden flex items-center justify-center transition-all flex-shrink-0 ${activeImage === idx ? 'bg-[#f4f6f8] ring-1 ring-slate-200' : 'bg-[#f4f6f8] hover:bg-[#e2e8f0]'}`}
+               >
+                 <img src={img} className="w-[60%] h-[60%] object-contain mix-blend-darken drop-shadow-sm" alt="Thumb" />
+               </button>
+             ))}
+           </div>
+
            {/* Main Image */}
-           <div className="aspect-[4/3] lg:aspect-square bg-slate-50 rounded-2xl flex items-center justify-center p-8 border border-slate-100 overflow-hidden relative shadow-sm">
+           <div className="flex-1 bg-[#f4f6f8] rounded-2xl flex items-center justify-center p-8 xl:p-12 overflow-hidden relative border border-transparent">
               {product.discount > 0 && (
-                <div className="absolute top-4 left-4 z-10 bg-black text-white text-sm font-bold px-3 py-1 rounded-full shadow-md">
+                <div className="absolute top-4 left-4 z-10 bg-black text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
                    {product.discount}% OFF
                 </div>
               )}
@@ -103,121 +116,63 @@ export default function ProductDetail() {
                 transition={{ duration: 0.3 }}
                 src={images[activeImage]} 
                 alt={product.title} 
-                className="w-full h-full object-contain mix-blend-multiply drop-shadow-xl" 
+                className="w-full h-full object-contain mix-blend-darken drop-shadow-lg" 
               />
            </div>
-           
-           {/* Thumbs */}
-           {images.length > 1 && (
-             <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-               {images.map((img: string, idx: number) => (
-                 <button 
-                   key={idx}
-                   onClick={() => setActiveImage(idx)}
-                   className={`w-20 h-20 rounded-xl border-2 flex-shrink-0 bg-white p-2 transition-all ${activeImage === idx ? 'border-primary shadow-md' : 'border-slate-100 hover:border-slate-300'}`}
-                 >
-                   <img src={img} className="w-full h-full object-contain" alt="Thumb" />
-                 </button>
-               ))}
-             </div>
-           )}
         </div>
 
         {/* Details */}
-        <div className="w-full lg:w-1/2 flex flex-col">
-          <div className="mb-2 text-sm text-primary font-medium tracking-wide uppercase">{product.brandName || product.categoryName}</div>
-          <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4 leading-tight">{product.title}</h1>
+        <div className="w-full lg:flex-1 flex flex-col pt-1">
+          <h1 className="text-3xl md:text-[34px] font-bold text-[#1a202c] mb-2 leading-tight">{product.title}</h1>
           
-          <div className="flex items-center gap-4 mb-6">
-            <div className="flex items-center gap-1">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="flex items-center gap-[2px]">
               {[1,2,3,4,5].map((s) => (
-                <Star key={s} size={18} className={s <= Math.round(product.rating || 0) ? "fill-secondary text-secondary" : "text-slate-300"} />
+                <Star key={s} size={15} className={s <= Math.round(product.rating || 0) ? "fill-[#00b252] text-[#00b252]" : "text-slate-200 fill-slate-200"} />
               ))}
             </div>
-            <span className="text-sm font-medium text-slate-700">{product.rating || "0.0"} Rating</span>
-            <span className="w-1 h-1 bg-slate-300 rounded-full"></span>
-            <span className="text-sm text-slate-500 hover:text-primary transition-colors cursor-pointer">{product.reviewCount || 0} Reviews</span>
+            <span className="text-[14px] text-slate-500 hover:text-[#00b252] transition-colors cursor-pointer">{product.reviewCount || 12} Reviews</span>
           </div>
 
-          <div className="flex items-end gap-3 mb-6">
-            <span className="text-4xl font-bold text-slate-900">${currentPrice.toFixed(2)}</span>
-            {product.discount > 0 && (
-              <span className="text-xl text-slate-400 line-through mb-1">${product.originalPrice?.toFixed(2)}</span>
-            )}
+          <div className="flex items-baseline gap-3 mb-6">
+             <span className="text-[#1a202c] text-[28px] font-extrabold">${currentPrice.toFixed(0)}</span>
+             {product.discount > 0 && (
+               <span className="text-[18px] text-slate-400 font-bold line-through">${product.originalPrice?.toFixed(0)}</span>
+             )}
           </div>
 
-          <p className="text-slate-600 mb-8 leading-relaxed text-lg">
-            {product.shortDescription || product.description}
-          </p>
-
-          <hr className="border-slate-100 mb-8"/>
-
-          {/* Variants */}
-          {product.colors && product.colors.length > 0 && (
-            <div className="mb-8">
-              <h3 className="font-bold text-sm text-slate-900 mb-3 uppercase tracking-wider">Color</h3>
-              <div className="flex gap-3">
-                {product.colors.map((c: any, i: number) => (
-                  <button 
-                    key={i} 
-                    onClick={() => setSelectedColor(i)}
-                    className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transition-all ${selectedColor === i ? 'border-primary ring-2 ring-primary/30 ring-offset-1' : 'border-slate-200'}`}
-                    title={c.name}
-                  >
-                    <span className="w-8 h-8 rounded-full shadow-inner" style={{ backgroundColor: c.hex }}></span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
+          <div className="flex items-center gap-2 text-[#5c6e82] text-[15px] mb-8 pb-1">
+             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-80"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+             <span>Save {product.discount > 0 ? product.discount : 84}% right now</span>
+          </div>
+          
           {/* Actions */}
-          <div className="flex flex-col sm:flex-row gap-4 mb-10">
-            <div className="flex items-center justify-between border-2 border-slate-200 rounded-xl w-full sm:w-36 overflow-hidden bg-white">
-               <button 
-                 className="p-3 hover:bg-slate-100 text-slate-600 transition-colors"
-                 onClick={() => setQuantity(q => Math.max(1, q - 1))}
-               >
-                 <Minus size={20}/>
-               </button>
-               <span className="font-bold text-lg text-slate-900 w-12 text-center">{quantity}</span>
-               <button 
-                 className="p-3 hover:bg-slate-100 text-slate-600 transition-colors"
-                 onClick={() => setQuantity(q => q + 1)}
-               >
-                 <Plus size={20}/>
-               </button>
-            </div>
-            
+          <div className="flex flex-col sm:flex-row gap-4 mb-10 w-full sm:w-[180px]">
             <button 
               onClick={handleAddToCart}
-              className="flex-1 bg-primary hover:bg-primary-dark transition-colors text-white font-bold text-lg rounded-xl flex items-center justify-center gap-2 py-4 shadow-xl shadow-primary/20"
+              className="bg-[#1e293b] hover:bg-black transition-colors text-white font-medium text-[15px] rounded-lg w-full flex items-center justify-center py-3.5 px-8 shadow-sm"
             >
-              <ShoppingCart size={22} /> Add to Cart
-            </button>
-            <button className="p-4 border-2 border-slate-200 rounded-xl hover:bg-slate-50 transition-colors text-slate-500 hover:text-danger hover:border-danger hidden sm:block">
-              <Heart size={24} />
+              Add to Cart
             </button>
           </div>
 
-          {/* Features */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-             <div className="flex items-start gap-3">
-               <Truck className="text-primary mt-0.5" size={24}/>
-               <div>
-                 <h4 className="font-bold text-slate-900 text-sm">Free Delivery</h4>
-                 <p className="text-xs text-slate-500 mt-0.5">Enter postal code for Delivery Availability</p>
-               </div>
+          <hr className="border-slate-200 mb-8"/>
+
+          {/* Features - Icon List */}
+          <div className="flex flex-col gap-4 text-[#5c6e82]">
+             <div className="flex items-center gap-3">
+               <svg fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418" /></svg>
+               <span className="text-[15px]">Free shipping worldwide</span>
              </div>
-             <div className="flex items-start gap-3">
-               <RotateCcw className="text-primary mt-0.5" size={24}/>
-               <div>
-                 <h4 className="font-bold text-slate-900 text-sm">Return Delivery</h4>
-                 <p className="text-xs text-slate-500 mt-0.5">Free 30 Days Delivery Returns.</p>
-               </div>
+             <div className="flex items-center gap-3">
+               <svg fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" /></svg>
+               <span className="text-[15px]">100% Secured Payment</span>
+             </div>
+             <div className="flex items-center gap-3">
+               <svg fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" /></svg>
+               <span className="text-[15px]">Trusted by top brands</span>
              </div>
           </div>
-
         </div>
       </div>
 

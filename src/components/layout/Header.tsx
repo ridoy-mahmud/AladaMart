@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingCart, Heart, User, Menu, X, Package2, Phone, ChevronDown, LogOut, Smartphone, Laptop, Tablet, Headphones, Watch, Monitor, Camera, Speaker } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { ShoppingCart, Heart, User, Menu, X, Package2, Phone, ChevronDown, LogOut, Smartphone, Laptop, Tablet, Headphones, Watch, Monitor, Camera, Speaker, Search } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCartStore } from '../../store/useCartStore';
@@ -22,9 +22,45 @@ const categoryIcons: Record<string, React.ReactNode> = {
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [categories, setCategories] = useState<any[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
   const cartItemsCount = useCartStore(state => state.items.reduce((total, item) => total + item.quantity, 0));
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, signOut } = useAuth();
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setIsSearchOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    if (searchQuery.trim().length > 1) {
+      const fetchSearch = async () => {
+        try {
+          const res = await fetch(`/api/products?search=${encodeURIComponent(searchQuery.trim())}&limit=5`);
+          const data = await res.json();
+          setSearchResults(data.products || []);
+          setIsSearchOpen(true);
+        } catch (err) {
+          console.error(err);
+        }
+      };
+      // Debounce slightly
+      const timer = setTimeout(fetchSearch, 300);
+      return () => clearTimeout(timer);
+    } else {
+        setSearchResults([]);
+        setIsSearchOpen(false);
+    }
+  }, [searchQuery]);
 
   useEffect(() => {
     fetch('/api/categories')
@@ -32,6 +68,15 @@ export default function Header() {
       .then(data => setCategories(data))
       .catch(err => console.error(err));
   }, []);
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
+      setIsSearchOpen(false);
+      setSearchQuery('');
+    }
+  };
 
   const handleLogout = async () => {
     try {
@@ -43,47 +88,94 @@ export default function Header() {
     }
   };
 
-  const NavLinks = () => (
-    <>
-      <Link to="/" className="text-sm font-medium text-slate-900 hover:text-primary transition-colors">Home</Link>
-      <Link to="/deal" className="text-sm border border-red-200 bg-red-50 text-red-600 rounded-full px-3 py-1 font-bold hover:bg-red-100 transition-colors">Hot Deals!</Link>
-      <Link to="/shop" className="text-sm font-medium text-slate-900 hover:text-primary transition-colors">Shop</Link>
-      <Link to="/about" className="text-sm font-medium text-slate-900 hover:text-primary transition-colors">About</Link>
-      <Link to="/contact" className="text-sm font-medium text-slate-900 hover:text-primary transition-colors">Contact</Link>
-    </>
-  );
+  const NavLinks = () => {
+    const isActive = (path: string) => location.pathname === path;
+    const linkClass = (path: string) => `text-[15px] transition-colors pb-1 ${isActive(path) ? 'font-bold text-green-700 border-b-2 border-green-700' : 'font-medium text-slate-700 hover:text-green-700'}`;
+    
+    return (
+      <>
+        <Link to="/" className={linkClass('/')}>Home</Link>
+        <Link to="/shop" className={linkClass('/shop')}>Shop</Link>
+        <Link to="/blog" className={linkClass('/blog')}>Blog</Link>
+        <Link to="/deal" className={linkClass('/deal')}>Hot Deal</Link>
+      </>
+    );
+  };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
-      {/* Top Bar */}
-      <div className="bg-[#1e293b] text-slate-300 text-xs py-2 hidden md:block">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1"><Phone size={14} /> +1 234 567 890</span>
-            <span className="hidden lg:inline">Free shipping on all orders over $200!</span>
-          </div>
-          <div className="flex items-center gap-4">
-            <button className="hover:text-white transition-colors flex items-center gap-1">English <ChevronDown size={14}/></button>
-            <button className="hover:text-white transition-colors flex items-center gap-1">USD <ChevronDown size={14}/></button>
-          </div>
-        </div>
-      </div>
+    <header className="sticky top-0 z-50 bg-white/70 backdrop-blur-md">
       
       {/* Main Header */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-5 flex items-center justify-between gap-4 lg:gap-8 bg-white border-b border-slate-100">
+      <div className="w-full sm:w-[95%] md:w-[90%] lg:w-[85%] mx-auto px-4 sm:px-0 py-4 sm:py-5 flex items-center justify-between gap-4 lg:gap-8 bg-transparent">
         
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 flex-shrink-0">
-          <div className="bg-primary text-white p-1.5 rounded-lg">
-            <Package2 size={24} />
-          </div>
-          <span className="text-2xl font-bold tracking-tight text-slate-900">Shop<span className="text-primary">Mart</span></span>
+          <span className="text-2xl font-black tracking-tighter text-[#0b4d2c] uppercase">Shopcar<span className="text-[#34a853]">t</span></span>
         </Link>
 
-        {/* Navigation (Desktop) */}
-        <nav className="hidden md:flex items-center gap-6">
-          <NavLinks />
-        </nav>
+        {/* Navigation & Search (Desktop) */}
+        <div className="hidden md:flex items-center gap-6 flex-1 justify-start ml-12 lg:ml-20 max-w-3xl">
+           <nav className="flex items-center gap-6 flex-shrink-0">
+             <NavLinks />
+           </nav>
+           
+           {/* Search */}
+           <div className="relative flex-1 max-w-[240px] ml-4" ref={searchRef}>
+              <form onSubmit={handleSearchSubmit} className="relative w-full">
+                 <input 
+                   type="text" 
+                   value={searchQuery}
+                   onChange={(e) => setSearchQuery(e.target.value)}
+                   onFocus={() => { if(searchQuery.trim().length > 1) setIsSearchOpen(true); }}
+                   placeholder="Search..." 
+                   className="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-full py-2 pl-4 pr-10 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                 />
+                 <button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary">
+                   <Search size={18} />
+                 </button>
+              </form>
+              
+              {/* Search Suggestions Dropdown */}
+              <AnimatePresence>
+                {isSearchOpen && searchResults.length > 0 && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl border border-slate-100 overflow-hidden z-50 p-2 flex flex-col gap-1 max-h-[400px] overflow-y-auto"
+                  >
+                    <div className="px-3 py-1.5 text-xs font-bold text-slate-400 uppercase tracking-wider">Products</div>
+                    {searchResults.map((product) => (
+                       <Link 
+                         key={product._id} 
+                         to={`/product/${product.slug}`}
+                         onClick={() => { setIsSearchOpen(false); setSearchQuery(''); }}
+                         className="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg transition-colors"
+                       >
+                          <div className="w-10 h-10 bg-slate-50 rounded-md p-1 flex-shrink-0 border border-slate-100">
+                             <img src={product.thumbnail} alt={product.title} className="w-full h-full object-contain mix-blend-multiply" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                             <h5 className="text-sm font-medium text-slate-800 truncate">{product.title}</h5>
+                             <div className="flex items-center gap-2 mt-0.5">
+                                <span className="text-xs font-bold text-slate-900">${(product.discount > 0 ? product.price : (product.originalPrice || product.price)).toFixed(2)}</span>
+                                {product.discount > 0 && <span className="text-[10px] text-slate-400 line-through">${product.originalPrice?.toFixed(2)}</span>}
+                             </div>
+                          </div>
+                       </Link>
+                    ))}
+                    <button 
+                      onClick={handleSearchSubmit} 
+                      className="mt-1 w-full py-2 text-sm text-center text-primary font-medium hover:bg-primary/5 rounded-lg transition-colors border-t border-slate-100"
+                    >
+                      View all results for "{searchQuery}"
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+           </div>
+        </div>
 
         {/* Icons */}
         <div className="flex items-center gap-5 sm:gap-6 flex-shrink-0">
@@ -108,8 +200,8 @@ export default function Header() {
                </div>
             </div>
           ) : (
-            <Link to="/login" className="text-slate-700 hover:text-primary transition-colors hidden sm:flex flex-col items-center gap-1 group">
-              <User size={24} strokeWidth={1.5} className="group-hover:scale-110 transition-transform" />
+            <Link to="/login" className="text-slate-700 hover:text-green-700 transition-colors hidden sm:flex flex-col items-center gap-1 group">
+              <User size={28} strokeWidth={1.5} className="group-hover:scale-110 transition-transform" />
             </Link>
           )}
 
@@ -144,8 +236,7 @@ export default function Header() {
           >
             <div className="p-4 bg-slate-100 flex items-center justify-between border-b">
                <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-2">
-                 <Package2 size={24} className="text-primary"/>
-                 <span className="text-xl font-bold">ShopMart</span>
+                 <span className="text-xl font-black tracking-tighter text-[#0b4d2c] uppercase">Shopcar<span className="text-[#34a853]">t</span></span>
                </Link>
                <button onClick={() => setIsMobileMenuOpen(false)} className="bg-white p-1 rounded-md shadow-sm text-slate-600"><X size={24} /></button>
             </div>
@@ -155,7 +246,6 @@ export default function Header() {
                  {name: "Home", path: "/"},
                  {name: "Hot Deals", path: "/deal"},
                  {name: "Shop", path: "/shop"},
-                 {name: "About Us", path: "/about"},
                  {name: "Contact", path: "/contact"},
                ].map((item, idx) => (
                  <Link 

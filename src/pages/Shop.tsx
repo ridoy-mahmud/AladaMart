@@ -167,7 +167,7 @@ export default function Shop() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 bg-white p-4 rounded-xl shadow-sm border border-slate-100">
             <div className="flex items-center gap-2">
               <button 
-                className="lg:hidden flex items-center gap-2 bg-slate-100 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-200"
+                className="lg:hidden flex items-center gap-2 bg-slate-100 text-slate-900 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-200"
                 onClick={() => setIsFilterOpen(true)}
               >
                 <Filter size={16} /> Filters {activeFiltersCount > 0 && <span className="bg-primary text-white w-5 h-5 rounded-full flex items-center justify-center text-xs">{activeFiltersCount}</span>}
@@ -184,7 +184,7 @@ export default function Shop() {
               <span className="text-sm text-slate-500 whitespace-nowrap hidden sm:inline">Sort by:</span>
               <div className="relative flex-1 sm:flex-none">
                 <select 
-                  className="w-full sm:w-auto appearance-none bg-white border border-slate-200 text-sm font-medium rounded-lg px-4 py-2.5 pr-10 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                  className="w-full sm:w-auto appearance-none bg-white border border-slate-200 text-slate-900 text-sm font-medium rounded-lg px-4 py-2.5 pr-10 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
                   value={sort}
                   onChange={(e) => setSort(e.target.value)}
                 >

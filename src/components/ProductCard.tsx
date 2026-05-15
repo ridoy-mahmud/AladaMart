@@ -38,17 +38,17 @@ export default function ProductCard({ product, idx = 0 }: { product: any, idx?: 
           </div>
       )}
 
-      <div className="absolute top-4 right-4 z-10 flex flex-col gap-2 translate-x-12 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300">
+      <div className="absolute top-4 right-4 z-10 flex flex-col gap-2 px-1 py-1 -mr-1 -mt-1 pt-2">
          <button 
            onClick={(e) => { e.preventDefault(); setIsQuickViewOpen(true); }}
-           className="bg-white text-slate-800 hover:bg-primary hover:text-white p-2 rounded-full shadow-md transition-colors"
+           className="translate-x-12 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300 ease-out bg-white text-slate-800 hover:bg-primary hover:text-white p-2 rounded-full shadow-md hover:scale-110 active:scale-95"
            title="Quick View"
          >
            <Eye size={18} />
          </button>
          <button 
            onClick={(e) => { e.preventDefault(); toast.success('Added to wishlist!'); }}
-           className="bg-white text-slate-800 hover:text-danger p-2 rounded-full shadow-md transition-colors"
+           className="translate-x-12 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300 delay-[50ms] ease-out bg-white text-slate-800 hover:text-danger p-2 rounded-full shadow-md hover:scale-110 active:scale-95"
            title="Add to Wishlist"
          >
            <Heart size={18} />
@@ -80,7 +80,7 @@ export default function ProductCard({ product, idx = 0 }: { product: any, idx?: 
           </div>
           <button 
             onClick={handleAddToCart}
-            className="bg-primary/10 hover:bg-primary text-primary hover:text-white p-2 sm:p-3 rounded-full transition-colors"
+            className="opacity-80 group-hover:opacity-100 bg-primary/10 group-hover:bg-primary text-primary group-hover:text-white p-2 sm:p-3 rounded-full transition-all duration-300 transform group-hover:scale-110 hover:-translate-y-1 active:scale-95 shadow-sm group-hover:shadow-md"
             title="Add to Cart"
           >
             <ShoppingCart size={18} className="sm:w-5 sm:h-5" />
