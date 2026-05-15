@@ -247,6 +247,21 @@ export default function Header() {
                <button onClick={() => setIsMobileMenuOpen(false)} className="bg-white p-1 rounded-md shadow-sm text-slate-600"><X size={24} /></button>
             </div>
             
+            <div className="p-4 border-b border-slate-100">
+               <form onSubmit={(e) => { handleSearchSubmit(e); setIsMobileMenuOpen(false); }} className="relative w-full">
+                  <input 
+                    type="text" 
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search..." 
+                    className="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-full py-3 pl-4 pr-10 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                  />
+                  <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary">
+                    <Search size={20} />
+                  </button>
+               </form>
+            </div>
+            
             <nav className="flex flex-col border-b">
                {[
                  {name: "Home", path: "/"},

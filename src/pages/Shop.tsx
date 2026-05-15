@@ -16,11 +16,17 @@ export default function Shop() {
   const [selectedBrand, setSelectedBrand] = useState<string>('');
   const [priceRange, setPriceRange] = useState<number>(2000);
   const [sort, setSort] = useState('newest');
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 12;
   
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get('search') || '';
 
   const location = useLocation();
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory, selectedBrand, priceRange, sort, searchQuery]);
 
   useEffect(() => {
     const cat = searchParams.get('category');
@@ -70,6 +76,82 @@ export default function Shop() {
   });
 
   const activeFiltersCount = (selectedCategory ? 1 : 0) + (selectedBrand ? 1 : 0);
+
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+  const paginatedProducts = filteredProducts.slice((currentPage - 1) * productsPerPage, currentPage * productsPerPage);
+
+  const renderPagination = () => {
+    if (totalPages <= 1) return null;
+
+    const pages = [];
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
+    // Previous Button
+    pages.push(
+      <button 
+        key="prev" 
+        onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+        disabled={currentPage === 1}
+        className={`px-4 h-10 rounded-lg flex items-center justify-center border font-medium transition-colors ${currentPage === 1 ? 'border-slate-100 text-slate-300 cursor-not-allowed' : 'border-slate-200 text-slate-600 hover:bg-slate-50'}`}
+      >
+        Previous
+      </button>
+    );
+
+    if (startPage > 1) {
+      pages.push(
+        <button key={1} onClick={() => setCurrentPage(1)} className="w-10 h-10 rounded-lg flex items-center justify-center border border-slate-200 text-slate-600 hover:bg-slate-50 hidden sm:flex">1</button>
+      );
+      if (startPage > 2) {
+        pages.push(<span key="dots-1" className="w-10 h-10 flex items-center justify-center text-slate-400 hidden sm:flex">...</span>);
+      }
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+        pages.push(
+          <button 
+            key={i} 
+            onClick={() => setCurrentPage(i)}
+            className={`w-10 h-10 rounded-lg flex items-center justify-center border transition-colors ${currentPage === i ? 'border-primary bg-primary text-white font-bold shadow-sm' : 'border-slate-200 text-slate-600 hover:bg-slate-50'}`}
+          >
+            {i}
+          </button>
+        );
+    }
+
+    if (endPage < totalPages) {
+      if (endPage < totalPages - 1) {
+        pages.push(<span key="dots-2" className="w-10 h-10 flex items-center justify-center text-slate-400 hidden sm:flex">...</span>);
+      }
+      pages.push(
+        <button key={totalPages} onClick={() => setCurrentPage(totalPages)} className="w-10 h-10 rounded-lg flex items-center justify-center border border-slate-200 text-slate-600 hover:bg-slate-50 hidden sm:flex">{totalPages}</button>
+      );
+    }
+
+    // Next Button
+    pages.push(
+      <button 
+        key="next" 
+        onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+        disabled={currentPage === totalPages}
+        className={`px-4 h-10 rounded-lg flex items-center justify-center border font-medium transition-colors ${currentPage === totalPages ? 'border-slate-100 text-slate-300 cursor-not-allowed' : 'border-slate-200 text-slate-600 hover:bg-slate-50'}`}
+      >
+        Next
+      </button>
+    );
+
+    return (
+      <div className="flex flex-wrap justify-center items-center mt-12 gap-2">
+        {pages}
+      </div>
+    );
+  };
 
   const clearFilters = () => {
     setSelectedCategory('');
@@ -211,20 +293,12 @@ export default function Shop() {
           ) : filteredProducts.length > 0 ? (
             <>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
-                {filteredProducts.map((p: any, i: number) => (
+                {paginatedProducts.map((p: any, i: number) => (
                   <ProductCard key={p._id} product={p} idx={i} />
                 ))}
               </div>
-              {/* Pagination (placeholder for UI) */}
-              {filteredProducts.length > 12 && (
-                <div className="flex justify-center mt-12 gap-2">
-                  <button className="w-10 h-10 rounded-lg flex items-center justify-center border border-slate-200 text-slate-600 hover:bg-slate-50">1</button>
-                  <button className="w-10 h-10 rounded-lg flex items-center justify-center border border-primary bg-primary text-white">2</button>
-                  <button className="w-10 h-10 rounded-lg flex items-center justify-center border border-slate-200 text-slate-600 hover:bg-slate-50">3</button>
-                  <span className="w-10 h-10 flex items-center justify-center text-slate-400">...</span>
-                  <button className="w-10 h-10 rounded-lg flex items-center justify-center border border-slate-200 text-slate-600 hover:bg-slate-50">10</button>
-                </div>
-              )}
+              {/* Pagination */}
+              {renderPagination()}
             </>
           ) : (
             <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-slate-200">
