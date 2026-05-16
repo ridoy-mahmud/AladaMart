@@ -41,7 +41,7 @@ export default function Home() {
             <div className="relative z-10 w-full md:w-1/2 p-6 md:p-10 flex flex-col justify-center items-start text-left h-full">
               <div className="inline-flex items-center gap-2 bg-[#9ce5a7]/80 hover:bg-[#9ce5a7] rounded-full p-1 pr-3 mb-4 cursor-pointer hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5">
                 <span className="bg-[#0b9c4c] text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">NEWS</span>
-                <span className="text-xs font-medium text-[#076a32] whitespace-nowrap">Free Shipping on Orders Above $50!</span>
+                <span className="text-xs font-medium text-[#076a32] whitespace-nowrap">Free Shipping on Orders Above ৳5000!</span>
                 <ArrowRight size={14} className="text-[#076a32] group-hover:translate-x-1 transition-transform"/>
               </div>
               <motion.h2 
@@ -54,18 +54,17 @@ export default function Home() {
               </motion.h2>
               <div className="mb-4 md:mb-5 flex flex-col items-start gap-1">
                 <span className="text-xs font-semibold text-[#1a1a1a]">Starts from</span>
-                <span className="text-xl md:text-2xl font-bold text-[#1a1a1a]">$4.90</span>
+                <span className="text-xl md:text-2xl font-bold text-[#1a1a1a]">৳490</span>
               </div>
             </div>
-            <div className="w-full md:w-1/2 h-56 md:h-full relative flex items-end justify-end pointer-events-none mt-4 md:mt-0">
+            <div className="w-full md:w-1/2 h-56 md:h-full relative flex items-center justify-center p-6 md:p-8 pointer-events-none">
                <motion.img 
                  initial={{ opacity: 0, x: 50 }}
                  animate={{ opacity: 1, x: 0 }}
                  transition={{ duration: 0.7, type: "spring", bounce: 0.4 }}
-                 src="https://images.unsplash.com/photo-1628190587788-b2a65a397850?w=800&q=80" 
-                 alt="Listening to music" 
-                 className="w-[110%] h-[120%] md:h-[115%] object-cover object-bottom" 
-                 style={{ bottom: 0, right: -20, position: 'absolute' }}
+                 src="https://i.ibb.co/6JVb0qFc/d4619a4a55ea99c9b947f3573562b2b9.png" 
+                 alt="Premium Black Headphones" 
+                 className="w-full h-full max-w-[320px] sm:max-w-[380px] md:max-w-[280px] lg:max-w-[100%] max-h-[260px] md:max-h-[280px] lg:max-h-[100%] object-contain drop-shadow-2xl" 
                />
             </div>
           </div>
@@ -73,38 +72,38 @@ export default function Home() {
           {/* Side Banners */}
           <div className="flex flex-col gap-4 md:gap-5 h-[360px]">
             {/* Best Products Card */}
-            <div className="flex-1 bg-[#fedfb3] rounded-3xl p-6 md:p-8 relative flex flex-col justify-center shadow-sm hover:shadow-md transition-shadow transition-transform group overflow-hidden cursor-pointer h-full">
+            <Link to="/shop" className="flex-1 bg-[#fedfb3] rounded-3xl p-6 md:p-8 relative flex flex-col justify-center shadow-sm hover:shadow-lg hover:-translate-y-1 hover:scale-[1.02] transition-all duration-300 group overflow-hidden cursor-pointer h-full">
               <div className="relative z-10 w-3/5">
-                <h3 className="text-2xl font-bold text-[#45525e] mb-1 leading-snug">Best<br/><span className="text-[#aa8a66] font-medium">products</span></h3>
-                <Link to="/shop" className="text-sm font-medium text-[#45525e] flex items-center gap-1 hover:text-black transition-colors mt-3">
-                  View more <ArrowRight size={16} />
-                </Link>
+                <h3 className="text-2xl font-bold text-[#45525e] mb-1 leading-snug group-hover:text-black transition-colors">Best<br/><span className="text-[#aa8a66] font-medium group-hover:text-[#8a6a46] transition-colors">products</span></h3>
+                <span className="text-sm font-bold text-[#45525e] flex items-center gap-1 group-hover:text-black transition-colors mt-3">
+                  View more <ArrowRight size={16} className="group-hover:translate-x-2 transition-transform duration-300" />
+                </span>
               </div>
               <div className="absolute right-[-20px] top-1/2 -translate-y-1/2 w-[160px] pointer-events-none">
                 <img 
                   src="https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?w=400&q=80&auto=format&fit=crop" 
                   alt="Airpods" 
-                  className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500 group-hover:-rotate-3" 
+                  className="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-500 group-hover:-rotate-6" 
                 />
               </div>
-            </div>
+            </Link>
 
             {/* Discounts Card */}
-            <div className="flex-1 bg-[#c5ddf9] rounded-3xl p-6 md:p-8 relative flex flex-col justify-center shadow-sm hover:shadow-md transition-shadow transition-transform group overflow-hidden cursor-pointer h-full">
+            <Link to="/deal" className="flex-1 bg-[#c5ddf9] rounded-3xl p-6 md:p-8 relative flex flex-col justify-center shadow-sm hover:shadow-lg hover:-translate-y-1 hover:scale-[1.02] transition-all duration-300 group overflow-hidden cursor-pointer h-full">
               <div className="relative z-10 w-3/5">
-                <h3 className="text-2xl font-bold text-[#45525e] mb-1 leading-snug">20%<br/><span className="text-[#84a3c3] font-medium">discounts</span></h3>
-                <Link to="/shop" className="text-sm font-medium text-[#45525e] flex items-center gap-1 hover:text-black transition-colors mt-3">
-                  View more <ArrowRight size={16} />
-                </Link>
+                <h3 className="text-2xl font-bold text-[#45525e] mb-1 leading-snug group-hover:text-black transition-colors">20%<br/><span className="text-[#84a3c3] font-medium group-hover:text-[#6483a3] transition-colors">discounts</span></h3>
+                <span className="text-sm font-bold text-[#45525e] flex items-center gap-1 group-hover:text-black transition-colors mt-3">
+                  View more <ArrowRight size={16} className="group-hover:translate-x-2 transition-transform duration-300" />
+                </span>
               </div>
               <div className="absolute right-[0px] top-1/2 -translate-y-1/2 w-[140px] pointer-events-none">
                 <img 
                   src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=400&q=80&auto=format&fit=crop" 
                   alt="Smartwatch" 
-                  className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500 group-hover:-rotate-3" 
+                  className="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-500 group-hover:-rotate-6" 
                 />
               </div>
-            </div>
+            </Link>
           </div>
         </div>
       </section>
@@ -242,10 +241,14 @@ export default function Home() {
 
       {/* Trust Badges */}
       <section className="py-20 max-w-7xl mx-auto px-4 border-t border-slate-100 mt-20">
+        <div className="flex flex-col items-center text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Why Shop With Us?</h2>
+          <p className="text-slate-500 max-w-2xl">We are dedicated to providing you with the best experience possible.</p>
+        </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {[
-            { icon: <Truck size={36} className="text-primary"/>, title: "Free Delivery", desc: "Free shipping over $100" },
-            { icon: <RotateCcw size={36} className="text-secondary"/>, title: "Free Return", desc: "Free return over $100" },
+            { icon: <Truck size={36} className="text-primary"/>, title: "Free Delivery", desc: "Free shipping over ৳5000" },
+            { icon: <RotateCcw size={36} className="text-secondary"/>, title: "Free Return", desc: "Free return over ৳5000" },
             { icon: <Headset size={36} className="text-danger"/>, title: "Customer Support", desc: "Friendly 24/7 support" },
             { icon: <ShieldCheck size={36} className="text-success"/>, title: "Money Back Guard", desc: "Quality checked by us" },
           ].map((b, i) => (

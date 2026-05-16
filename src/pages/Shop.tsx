@@ -14,7 +14,7 @@ export default function Shop() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedBrand, setSelectedBrand] = useState<string>('');
-  const [priceRange, setPriceRange] = useState<number>(2000);
+  const [priceRange, setPriceRange] = useState<number>(100000);
   const [sort, setSort] = useState('newest');
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 12;
@@ -161,7 +161,7 @@ export default function Shop() {
   const clearFilters = () => {
     setSelectedCategory('');
     setSelectedBrand('');
-    setPriceRange(2000);
+    setPriceRange(100000);
     setSearchParams(new URLSearchParams());
   };
 
@@ -224,15 +224,15 @@ export default function Shop() {
            <input 
              type="range" 
              min="0" 
-             max="2000" 
-             step="50" 
+             max="100000" 
+             step="500" 
              value={priceRange} 
              onChange={(e) => setPriceRange(Number(e.target.value))}
              className="w-full accent-primary h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer"
            />
            <div className="flex justify-between items-center mt-3 text-sm text-slate-600 font-medium">
-             <span>$0</span>
-             <span>Up to ${priceRange}</span>
+             <span>৳0</span>
+             <span>Up to ৳{priceRange}</span>
            </div>
          </div>
       </div>

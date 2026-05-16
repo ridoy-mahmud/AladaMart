@@ -27,35 +27,50 @@ const categoryData = [
   { name: 'Sports', sales: 2780 },
 ];
 
+import { Heart } from 'lucide-react';
+
 export default function Dashboard() {
   const { user, loading: authLoading } = useAuth();
   const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState({ products: 0, brands: 0, categories: 0 });
+  const [stats, setStats] = useState({ products: 0, brands: 0, categories: 0, orders: 0, revenue: 0 });
   const [recentProducts, setRecentProducts] = useState<any[]>([]);
+  const [topWishlisted, setTopWishlisted] = useState<any[]>([]);
 
   useEffect(() => {
     // Fetch real data for stats and recent products where possible
     const fetchDashboardData = async () => {
       try {
-        const [prodRes, brandRes, catRes] = await Promise.all([
+        const [prodRes, brandRes, catRes, orderRes, wishlistRes] = await Promise.all([
           fetch('/api/products?limit=5').catch(() => null),
           fetch('/api/brands').catch(() => null),
-          fetch('/api/categories').catch(() => null)
+          fetch('/api/categories').catch(() => null),
+          fetch('/api/orders').catch(() => null),
+          fetch('/api/wishlist/admin').catch(() => null)
         ]);
         
         const prodData = prodRes && prodRes.ok ? await prodRes.json() : [];
         const brandsData = brandRes && brandRes.ok ? await brandRes.json() : [];
         const catData = catRes && catRes.ok ? await catRes.json() : [];
+        const orderData = orderRes && orderRes.ok ? await orderRes.json() : [];
+        const wishlistData = wishlistRes && wishlistRes.ok ? await wishlistRes.json() : [];
         
+        const totalRev = Array.isArray(orderData) ? orderData.reduce((acc, curr) => acc + (curr.total || 0), 0) : 0;
+
         setStats({
            products: prodData.totalDocs || prodData.length || 0,
            brands: brandsData.length || 0,
-           categories: catData.length || 0
+           categories: catData.length || 0,
+           orders: Array.isArray(orderData) ? orderData.length : 0,
+           revenue: totalRev
         });
 
         if (Array.isArray(prodData) || prodData?.docs) {
            const items = Array.isArray(prodData) ? prodData : prodData.docs;
            setRecentProducts(items.slice(0, 5));
+        }
+
+        if (Array.isArray(wishlistData)) {
+           setTopWishlisted(wishlistData);
         }
       } catch (err) {
         console.error(err);
@@ -89,7 +104,7 @@ export default function Dashboard() {
       </div>
       <div>
         <h4 className="text-slate-500 text-sm font-medium mb-1">{title}</h4>
-        <h2 className="text-3xl font-black text-slate-900">{value}</h2>
+        <h2 className="text-3xl font-black text-slate-900">{typeof value === 'number' && title.includes('Revenue') ? `৳${value.toFixed(2)}` : value}</h2>
       </div>
     </div>
   );
@@ -103,10 +118,10 @@ export default function Dashboard() {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <StatCard title="Total Revenue" value="$45,231" icon={<DollarSign size={24} />} trend="12.5%" up={true} />
-        <StatCard title="Total Orders" value="1,245" icon={<ShoppingBag size={24} />} trend="5.2%" up={true} />
+        <StatCard title="Total Revenue" value={stats.revenue} icon={<DollarSign size={24} />} trend="12.5%" up={true} />
+        <StatCard title="Total Orders" value={stats.orders} icon={<ShoppingBag size={24} />} trend="5.2%" up={true} />
         <StatCard title="Total Products" value={stats.products} icon={<Package size={24} />} trend="1.1%" up={true} />
-        <StatCard title="Active Users" value="842" icon={<Users size={24} />} trend="2.4%" up={false} />
+        <StatCard title="Active Users" value="84" icon={<Users size={24} />} trend="2.4%" up={false} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
@@ -130,7 +145,7 @@ export default function Dashboard() {
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#64748B', fontSize: 12}} dy={10} />
-                <YAxis axisLine={false} tickLine={false} tick={{fill: '#64748B', fontSize: 12}} dx={-10} tickFormatter={(val) => `$${val/1000}k`} />
+                <YAxis axisLine={false} tickLine={false} tick={{fill: '#64748B', fontSize: 12}} dx={-10} tickFormatter={(val) => `৳${val/1000}k`} />
                 <Tooltip 
                   contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                   labelStyle={{ fontWeight: 'bold', color: '#0F172A' }}
@@ -193,7 +208,7 @@ export default function Dashboard() {
                        <span className="text-sm text-slate-600">{p.categoryName || 'Category'}</span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                       <span className="text-sm font-bold text-slate-900">${p.price?.toFixed(2)}</span>
+                       <span className="text-sm font-bold text-slate-900">৳{p.price?.toFixed(2)}</span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className="bg-green-100 text-green-700 text-xs font-bold px-2.5 py-1 rounded-md">In Stock</span>
@@ -210,51 +225,28 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* System Health */}
+        {/* Top Wishlisted */}
         <div className="bg-white p-6 rounded-2xl border border-slate-200">
-           <h3 className="text-lg font-bold text-slate-900 mb-6">System Health</h3>
-           <div className="space-y-6">
-              <div>
-                <div className="flex justify-between items-end mb-2">
-                  <div className="flex items-center gap-2 text-sm font-bold text-slate-700">
-                    <Activity size={16} className="text-primary" /> CPU Usage
-                  </div>
-                  <span className="text-sm font-bold text-slate-900">42%</span>
-                </div>
-                <div className="w-full bg-slate-100 rounded-full h-2">
-                  <div className="bg-primary h-2 rounded-full" style={{ width: '42%' }}></div>
-                </div>
-              </div>
-              
-              <div>
-                <div className="flex justify-between items-end mb-2">
-                  <div className="flex items-center gap-2 text-sm font-bold text-slate-700">
-                    <Activity size={16} className="text-blue-500" /> Memory
-                  </div>
-                  <span className="text-sm font-bold text-slate-900">68%</span>
-                </div>
-                <div className="w-full bg-slate-100 rounded-full h-2">
-                  <div className="bg-blue-500 h-2 rounded-full" style={{ width: '68%' }}></div>
-                </div>
-              </div>
-
-              <div>
-                <div className="flex justify-between items-end mb-2">
-                  <div className="flex items-center gap-2 text-sm font-bold text-slate-700">
-                     Storage
-                  </div>
-                  <span className="text-sm font-bold text-slate-900">12%</span>
-                </div>
-                <div className="w-full bg-slate-100 rounded-full h-2">
-                  <div className="bg-slate-900 h-2 rounded-full" style={{ width: '12%' }}></div>
-                </div>
-              </div>
-
-           </div>
-
-           <div className="mt-8 p-4 bg-slate-50 rounded-xl border border-slate-200">
-              <h4 className="text-sm font-bold text-slate-900 mb-1">Database Connected</h4>
-              <p className="text-xs text-slate-500 flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-green-500 inline-block"></span> MongoDB running smoothly</p>
+           <h3 className="text-lg font-bold text-slate-900 mb-6 border-b border-slate-100 pb-4">Top Wishlisted</h3>
+           <div className="space-y-4">
+              {topWishlisted.length === 0 ? (
+                 <p className="text-sm text-slate-500 text-center py-4">No wishlisted products yet</p>
+              ) : (
+                 topWishlisted.map((item, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                       <div className="w-12 h-12 rounded-lg bg-slate-50 p-1 border border-slate-100 flex-shrink-0">
+                          <img src={item.product?.thumbnail} className="w-full h-full object-contain mix-blend-multiply" alt=""/>
+                       </div>
+                       <div className="flex-1 min-w-0">
+                          <p className="text-sm font-bold text-slate-900 truncate">{item.product?.title}</p>
+                          <p className="text-xs text-slate-500">৳{item.product?.price}</p>
+                       </div>
+                       <div className="flex-shrink-0 flex items-center gap-1 text-sm font-bold text-primary bg-primary/10 px-2.5 py-1 rounded-full">
+                          <Heart size={14} fill="currentColor" /> {item.count}
+                       </div>
+                    </div>
+                 ))
+              )}
            </div>
         </div>
       </div>

@@ -1,16 +1,45 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
 import { Search } from 'lucide-react';
-
-const mockCustomers = [
-  { id: '1', name: 'John Doe', email: 'john@example.com', orders: 12, spent: 1250, date: '2023-11-20' },
-  { id: '2', name: 'Jane Smith', email: 'jane@example.com', orders: 5, spent: 450, date: '2023-12-05' },
-  { id: '3', name: 'Robert Johnson', email: 'robert@example.com', orders: 2, spent: 85, date: '2024-01-12' },
-  { id: '4', name: 'Emily Davis', email: 'emily@example.com', orders: 8, spent: 890, date: '2024-02-28' },
-  { id: '5', name: 'Michael Wilson', email: 'michael@example.com', orders: 21, spent: 3450, date: '2024-03-15' },
-];
+import toast from 'react-hot-toast';
 
 export default function AdminCustomers() {
+  const [customers, setCustomers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCustomers = async () => {
+      try {
+        const res = await fetch('/api/orders');
+        const orders = await res.json();
+        
+        // Group orders by email
+        const custMap: Record<string, any> = {};
+        orders.forEach((o: any) => {
+           const email = o.billing?.email || 'Unknown';
+           if (!custMap[email]) {
+              custMap[email] = {
+                 email,
+                 name: `${o.billing?.firstName || ''} ${o.billing?.lastName || ''}`.trim() || 'Unknown Customer',
+                 orders: 0,
+                 spent: 0,
+                 date: new Date(o.createdAt).toLocaleDateString()
+              };
+           }
+           custMap[email].orders += 1;
+           custMap[email].spent += (o.total || 0);
+        });
+        setCustomers(Object.values(custMap));
+      } catch (err) {
+        toast.error('Failed to fetch customers');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchCustomers();
+  }, []);
+
   return (
     <AdminLayout>
       <div className="flex justify-between items-center mb-6">
@@ -33,33 +62,40 @@ export default function AdminCustomers() {
         </div>
 
         <div className="flex-1 overflow-auto">
-          <table className="w-full text-left border-collapse">
-            <thead className="sticky top-0 bg-white z-10 shadow-sm border-b border-slate-200">
-              <tr>
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Customer</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Email</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Orders</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Total Spent</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Joined Date</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {mockCustomers.map((c) => (
-                <tr key={c.id} className="hover:bg-slate-50 transition-colors">
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                       <img src={`https://ui-avatars.com/api/?name=${c.name}&background=random`} alt={c.name} className="w-10 h-10 rounded-full" />
-                       <span className="text-sm font-bold text-slate-900">{c.name}</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-slate-600">{c.email}</td>
-                  <td className="px-6 py-4 text-sm text-slate-600">{c.orders}</td>
-                  <td className="px-6 py-4 text-sm font-bold text-slate-900">${c.spent.toFixed(2)}</td>
-                  <td className="px-6 py-4 text-sm text-slate-600">{c.date}</td>
+          {loading ? (
+             <div className="p-8 text-center text-slate-500">Loading customers...</div>
+          ) : (
+            <table className="w-full text-left border-collapse">
+              <thead className="sticky top-0 bg-white z-10 shadow-sm border-b border-slate-200">
+                <tr>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Customer</th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Email</th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Orders</th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Total Spent</th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Joined Date</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {customers.map((c, i) => (
+                  <tr key={i} className="hover:bg-slate-50 transition-colors">
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                         <img src={`https://ui-avatars.com/api/?name=${c.name}&background=random`} alt={c.name} className="w-10 h-10 rounded-full" />
+                         <span className="text-sm font-bold text-slate-900">{c.name}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-slate-600">{c.email}</td>
+                    <td className="px-6 py-4 text-sm text-slate-600">{c.orders}</td>
+                    <td className="px-6 py-4 text-sm font-bold text-slate-900">৳{c.spent.toFixed(2)}</td>
+                    <td className="px-6 py-4 text-sm text-slate-600">{c.date}</td>
+                  </tr>
+                ))}
+                {customers.length === 0 && (
+                  <tr><td colSpan={5} className="text-center p-8 text-slate-500">No customers found.</td></tr>
+                )}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
     </AdminLayout>

@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Star, Truck, ShieldCheck, RotateCcw, Minus, Plus, ShoppingCart, Heart } from 'lucide-react';
 import { useCartStore } from '../store/useCartStore';
+import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 import ProductCard from '../components/ProductCard';
 
@@ -25,6 +26,8 @@ export default function ProductDetail() {
   
   const [activeTab, setActiveTab] = useState('description');
   const addItem = useCartStore(state => state.addItem);
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchProd = async () => {
@@ -34,6 +37,14 @@ export default function ProductDetail() {
         if(res.ok) {
           const data = await res.json();
           setProduct(data);
+          
+          if (user?.uid) {
+             fetch(`/api/wishlist/user/${user.uid}`)
+               .then(r => r.json())
+               .then(items => {
+                  setIsWishlisted(items.some((item: any) => item._id === data._id));
+               });
+          }
           
           // fetch related
           if (data.categoryId || true) {
@@ -147,9 +158,9 @@ export default function ProductDetail() {
           </div>
 
           <div className="flex items-baseline gap-3 mb-6">
-             <span className="text-[#1a202c] text-[28px] font-extrabold">${currentPrice.toFixed(0)}</span>
+             <span className="text-[#1a202c] text-[28px] font-extrabold">৳{currentPrice.toFixed(0)}</span>
              {product.discount > 0 && (
-               <span className="text-[18px] text-slate-400 font-bold line-through">${product.originalPrice?.toFixed(0)}</span>
+               <span className="text-[18px] text-slate-400 font-bold line-through">৳{product.originalPrice?.toFixed(0)}</span>
              )}
           </div>
 
@@ -215,9 +226,39 @@ export default function ProductDetail() {
             
             <button 
               onClick={handleAddToCart}
-              className="bg-[#1e293b] hover:bg-black transition-colors text-white font-medium text-[15px] rounded-lg w-full sm:w-auto sm:px-12 flex items-center justify-center h-[52px] shadow-sm"
+              className="bg-[#1e293b] hover:bg-black transition-colors text-white font-medium text-[15px] rounded-lg w-full sm:w-auto sm:px-12 flex items-center justify-center h-[52px] shadow-sm flex-1"
             >
               Add to Cart
+            </button>
+
+            <button 
+              onClick={async () => {
+                 if (!user?.uid) {
+                    toast.error('Please login to wishlist products');
+                    return;
+                 }
+                 try {
+                    const res = await fetch('/api/wishlist/toggle', {
+                       method: 'POST',
+                       headers: { 'Content-Type': 'application/json' },
+                       body: JSON.stringify({ userId: user.uid, productId: product._id })
+                    });
+                    const data = await res.json();
+                    if (data.added) {
+                       setIsWishlisted(true);
+                       toast.success('Added to wishlist');
+                    } else if (data.removed) {
+                       setIsWishlisted(false);
+                       toast.success('Removed from wishlist');
+                    }
+                 } catch (err) {
+                    toast.error('Failed to update wishlist');
+                 }
+              }}
+              className={`flex items-center justify-center h-[52px] w-[52px] rounded-lg border-2 transition-colors flex-shrink-0 ${isWishlisted ? 'border-primary text-primary bg-primary/5' : 'border-slate-200 text-slate-500 hover:border-slate-300 hover:bg-slate-50'}`}
+              title="Add to Wishlist"
+            >
+              <Heart size={20} fill={isWishlisted ? 'currentColor' : 'none'} className={isWishlisted ? 'text-primary' : ''} />
             </button>
           </div>
 

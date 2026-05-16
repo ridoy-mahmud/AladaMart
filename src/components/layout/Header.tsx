@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { ShoppingCart, Heart, User, Menu, X, Package2, Phone, ChevronDown, LogOut, Smartphone, Laptop, Tablet, Headphones, Watch, Monitor, Camera, Speaker, Search, LayoutDashboard } from 'lucide-react';
+import { ShoppingCart, Heart, User, Menu, X, Package2, Phone, ChevronDown, LogOut, Smartphone, Laptop, Tablet, Headphones, Watch, Monitor, Camera, Speaker, Search, LayoutDashboard, Package } from 'lucide-react';
 import Logo from '../Logo';
 import { cn } from '../../lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -104,10 +104,10 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white/70 backdrop-blur-md">
+    <header className="sticky top-0 z-40 bg-white border-b border-slate-100 shadow-sm">
       
       {/* Main Header */}
-      <div className="w-full sm:w-[95%] md:w-[90%] lg:w-[85%] mx-auto px-4 sm:px-0 py-4 sm:py-5 flex items-center justify-between gap-4 lg:gap-8 bg-transparent">
+      <div className="w-full sm:w-[95%] md:w-[90%] lg:w-[85%] mx-auto px-4 py-3 sm:py-5 flex items-center justify-between gap-2 lg:gap-8 bg-transparent">
         
         {/* Logo */}
         <Link to="/" className="flex items-center flex-shrink-0">
@@ -165,8 +165,8 @@ export default function Header() {
                               <div className="flex-1 min-w-0">
                                  <h5 className="text-sm font-medium text-slate-800 truncate">{product.title}</h5>
                                  <div className="flex items-center gap-2 mt-0.5">
-                                    <span className="text-xs font-bold text-slate-900">${(product.discount > 0 && product.originalPrice ? product.price : (product.originalPrice || product.price)).toFixed(2)}</span>
-                                    {product.discount > 0 && product.originalPrice && <span className="text-[10px] text-slate-400 line-through">${product.originalPrice?.toFixed(2)}</span>}
+                                    <span className="text-xs font-bold text-slate-900">৳{(product.discount > 0 && product.originalPrice ? product.price : (product.originalPrice || product.price)).toFixed(2)}</span>
+                                    {product.discount > 0 && product.originalPrice && <span className="text-[10px] text-slate-400 line-through">৳{product.originalPrice?.toFixed(2)}</span>}
                                  </div>
                               </div>
                            </Link>
@@ -190,7 +190,7 @@ export default function Header() {
 
            {/* User / Cart / Mobile Toggle */}
           {user ? (
-            <div className="relative group hidden sm:block">
+            <div className="relative group md:block">
                <button className="flex items-center gap-2 text-slate-700 hover:text-primary transition-colors">
                   <img src={user.photoURL || `https://ui-avatars.com/api/?name=${user.email}`} alt="avatar" className="w-8 h-8 rounded-full border border-slate-200" />
                </button>
@@ -205,6 +205,12 @@ export default function Header() {
                         <LayoutDashboard size={16} /> Admin Dashboard
                       </Link>
                     )}
+                    <Link to="/profile" className="flex items-center gap-2 px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 rounded-lg">
+                      <User size={16} /> My Profile
+                    </Link>
+                    <Link to="/orders" className="flex items-center gap-2 px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 rounded-lg">
+                      <Package size={16} /> Order Status
+                    </Link>
                     <Link to="/account/wishlist" className="flex items-center gap-2 px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 rounded-lg">
                       <Heart size={16} /> Wishlist
                     </Link>
@@ -215,7 +221,7 @@ export default function Header() {
                </div>
             </div>
           ) : (
-            <Link to="/login" className="text-slate-700 hover:text-green-700 transition-colors hidden sm:flex flex-col items-center gap-1 group">
+            <Link to="/login" className="text-slate-700 hover:text-green-700 transition-colors flex flex-col items-center gap-1 group">
               <User size={28} strokeWidth={1.5} className="group-hover:scale-110 transition-transform" />
             </Link>
           )}
@@ -247,7 +253,7 @@ export default function Header() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: '-100%' }}
             transition={{ type: 'tween', duration: 0.3 }}
-            className="fixed inset-0 z-50 bg-white flex flex-col overflow-y-auto"
+            className="fixed inset-0 z-[100] bg-white flex flex-col overflow-y-auto"
           >
             <div className="p-4 bg-slate-100 flex items-center justify-between border-b">
                <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center">
@@ -302,6 +308,8 @@ export default function Header() {
             <div className="p-6 grid grid-cols-1 gap-4 mt-auto">
                {user ? (
                  <>
+                   <Link to="/profile" onClick={() => setIsMobileMenuOpen(false)} className="bg-slate-100 text-slate-800 py-3 rounded-lg text-center font-medium shadow-sm">My Profile</Link>
+                   <Link to="/orders" onClick={() => setIsMobileMenuOpen(false)} className="bg-slate-100 text-slate-800 py-3 rounded-lg text-center font-medium shadow-sm">Order Status</Link>
                    <Link to="/account/wishlist" onClick={() => setIsMobileMenuOpen(false)} className="bg-slate-100 text-slate-800 py-3 rounded-lg text-center font-medium shadow-sm">My Wishlist</Link>
                    <button onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }} className="bg-red-50 text-red-600 py-3 rounded-lg text-center font-medium shadow-sm">Sign Out</button>
                  </>

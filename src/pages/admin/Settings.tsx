@@ -30,9 +30,7 @@ export default function AdminSettings() {
             <div>
               <label className="block text-sm font-bold text-slate-700 mb-2">Currency</label>
               <select className="w-full border border-slate-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-white">
-                <option value="USD">USD ($)</option>
-                <option value="EUR">EUR (€)</option>
-                <option value="GBP">GBP (£)</option>
+                <option value="BDT">BDT (৳)</option>
               </select>
             </div>
             <div>

@@ -13,6 +13,9 @@ import Wishlist from './pages/Wishlist';
 import HotDeals from './pages/HotDeals';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
+import Profile from './pages/Profile';
+import Orders from './pages/Orders';
+import { Navigate } from 'react-router-dom';
 import Dashboard from './pages/admin/Dashboard';
 import AdminProducts from './pages/admin/Products';
 import AdminCustomers from './pages/admin/Customers';
@@ -53,6 +56,9 @@ export default function App() {
             <Route path="contact" element={<Contact />} />
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="orders" element={<Orders />} />
+            <Route path="order-status" element={<Navigate to="/orders" replace />} />
             <Route path="account/wishlist" element={<Wishlist />} />
             <Route path="*" element={<div className="min-h-screen flex items-center justify-center"><h1 className="text-2xl">404 - Page Not Found</h1></div>} />
           </Route>

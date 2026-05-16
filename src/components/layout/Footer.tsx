@@ -16,7 +16,7 @@ export default function Footer() {
             </div>
             <div>
               <p className="text-sm font-semibold text-slate-900">Visit Us</p>
-              <p className="text-xs text-slate-500">New Orleans, USA</p>
+              <p className="text-xs text-slate-500">Mirpur 10, Dhaka</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -25,7 +25,7 @@ export default function Footer() {
             </div>
             <div>
               <p className="text-sm font-semibold text-slate-900">Call Us</p>
-              <p className="text-xs text-slate-500">+12 958 648 597</p>
+              <p className="text-xs text-slate-500">+8801752039405</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -34,7 +34,7 @@ export default function Footer() {
             </div>
             <div>
               <p className="text-sm font-semibold text-slate-900">Working Hours</p>
-              <p className="text-xs text-slate-500">Mon - Sat: 10AM - 7PM</p>
+              <p className="text-xs text-slate-500">Sun - Thu: 10AM - 7PM</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -59,22 +59,22 @@ export default function Footer() {
               Discover curated furniture and electronics collections at AladaMart, blending style and comfort to elevate your living spaces.
             </p>
             <div className="flex gap-2">
-               <a href="#" className="w-9 h-9 rounded-full bg-slate-50 text-slate-500 flex items-center justify-center hover:bg-red-50 hover:text-red-600 transition-all hover:scale-110"><Youtube size={16} /></a>
-               <a href="#" className="w-9 h-9 rounded-full bg-slate-50 text-slate-500 flex items-center justify-center hover:bg-slate-900 hover:text-white transition-all hover:scale-110"><Github size={16} /></a>
-               <a href="#" className="w-9 h-9 rounded-full bg-slate-50 text-slate-500 flex items-center justify-center hover:bg-blue-50 hover:text-blue-600 transition-all hover:scale-110"><Linkedin size={16} /></a>
-               <a href="#" className="w-9 h-9 rounded-full bg-slate-50 text-slate-500 flex items-center justify-center hover:bg-blue-50 hover:text-blue-600 transition-all hover:scale-110"><Facebook size={16} /></a>
+               <a href="#" onClick={(e) => e.preventDefault()} className="w-9 h-9 rounded-full bg-slate-50 text-slate-500 flex items-center justify-center hover:bg-red-50 hover:text-red-600 transition-all hover:scale-110"><Youtube size={16} /></a>
+               <a href="#" onClick={(e) => e.preventDefault()} className="w-9 h-9 rounded-full bg-slate-50 text-slate-500 flex items-center justify-center hover:bg-slate-900 hover:text-white transition-all hover:scale-110"><Github size={16} /></a>
+               <a href="#" onClick={(e) => e.preventDefault()} className="w-9 h-9 rounded-full bg-slate-50 text-slate-500 flex items-center justify-center hover:bg-blue-50 hover:text-blue-600 transition-all hover:scale-110"><Linkedin size={16} /></a>
+               <a href="#" onClick={(e) => e.preventDefault()} className="w-9 h-9 rounded-full bg-slate-50 text-slate-500 flex items-center justify-center hover:bg-blue-50 hover:text-blue-600 transition-all hover:scale-110"><Facebook size={16} /></a>
             </div>
           </div>
 
           <div>
             <h3 className="font-bold text-slate-900 text-sm uppercase tracking-wider mb-4">Quick Links</h3>
             <ul className="space-y-2.5 text-sm text-slate-500">
-              <li><Link to="/about" className="hover:text-green-700 hover:translate-x-1 transition-all inline-block">About us</Link></li>
-              <li><Link to="/contact" className="hover:text-green-700 hover:translate-x-1 transition-all inline-block">Contact us</Link></li>
-              <li><Link to="/terms" className="hover:text-green-700 hover:translate-x-1 transition-all inline-block">Terms & Conditions</Link></li>
-              <li><Link to="/privacy" className="hover:text-green-700 hover:translate-x-1 transition-all inline-block">Privacy Policy</Link></li>
-              <li><Link to="/faq" className="hover:text-green-700 hover:translate-x-1 transition-all inline-block">FAQs</Link></li>
-              <li><Link to="/help" className="hover:text-green-700 hover:translate-x-1 transition-all inline-block">Help</Link></li>
+              <li><a href="#" onClick={(e) => e.preventDefault()} className="hover:text-green-700 hover:translate-x-1 transition-all inline-block">About us</a></li>
+              <li><a href="#" onClick={(e) => e.preventDefault()} className="hover:text-green-700 hover:translate-x-1 transition-all inline-block">Contact us</a></li>
+              <li><a href="#" onClick={(e) => e.preventDefault()} className="hover:text-green-700 hover:translate-x-1 transition-all inline-block">Terms & Conditions</a></li>
+              <li><a href="#" onClick={(e) => e.preventDefault()} className="hover:text-green-700 hover:translate-x-1 transition-all inline-block">Privacy Policy</a></li>
+              <li><a href="#" onClick={(e) => e.preventDefault()} className="hover:text-green-700 hover:translate-x-1 transition-all inline-block">FAQs</a></li>
+              <li><a href="#" onClick={(e) => e.preventDefault()} className="hover:text-green-700 hover:translate-x-1 transition-all inline-block">Help</a></li>
             </ul>
           </div>
 
@@ -84,8 +84,8 @@ export default function Footer() {
         <div className="border-t border-slate-100 mt-8 pt-6 flex flex-col md:flex-row items-center justify-between text-xs text-slate-400">
            <p>© {new Date().getFullYear()} <span className="font-bold text-slate-900 uppercase tracking-wide">AladaMart</span>. All rights reserved.</p>
            <div className="flex gap-4 mt-4 md:mt-0">
-             <Link to="/terms" className="hover:text-slate-900 transition-colors">Terms of Service</Link>
-             <Link to="/privacy" className="hover:text-slate-900 transition-colors">Privacy Policy</Link>
+             <a href="#" onClick={(e) => e.preventDefault()} className="hover:text-slate-900 transition-colors">Terms of Service</a>
+             <a href="#" onClick={(e) => e.preventDefault()} className="hover:text-slate-900 transition-colors">Privacy Policy</a>
            </div>
         </div>
       </div>

@@ -1,14 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
-import { Search, Filter, Eye } from 'lucide-react';
-
-const mockOrders = [
-  { id: 'ORD-1001', customer: 'John Doe', date: '2023-11-20', total: 125.00, status: 'Completed', items: 3 },
-  { id: 'ORD-1002', customer: 'Jane Smith', date: '2023-11-21', total: 45.00, status: 'Processing', items: 1 },
-  { id: 'ORD-1003', customer: 'Robert Johnson', date: '2023-11-21', total: 210.50, status: 'Pending', items: 4 },
-  { id: 'ORD-1004', customer: 'Emily Davis', date: '2023-11-22', total: 89.99, status: 'Shipped', items: 2 },
-  { id: 'ORD-1005', customer: 'Michael Wilson', date: '2023-11-22', total: 345.00, status: 'Cancelled', items: 1 },
-];
+import { Search, Filter, Eye, Edit } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const statusColors: any = {
   'Completed': 'bg-green-100 text-green-700',
@@ -16,9 +9,44 @@ const statusColors: any = {
   'Pending': 'bg-amber-100 text-amber-700',
   'Shipped': 'bg-purple-100 text-purple-700',
   'Cancelled': 'bg-red-100 text-red-700',
+  'Delivered': 'bg-emerald-100 text-emerald-700',
 };
 
 export default function AdminOrders() {
+  const [orders, setOrders] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+
+  const fetchOrders = async () => {
+    try {
+      const res = await fetch('/api/orders');
+      const data = await res.json();
+      setOrders(data);
+    } catch (error) {
+      toast.error('Failed to load orders');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleStatusChange = async (id: string, newStatus: string) => {
+    try {
+      const res = await fetch(`/api/orders/${id}/status`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus })
+      });
+      if (!res.ok) throw new Error('Failed to update status');
+      toast.success('Order status updated');
+      fetchOrders();
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
   return (
     <AdminLayout>
       <div className="flex justify-between items-center mb-6">
@@ -46,40 +74,55 @@ export default function AdminOrders() {
         </div>
 
         <div className="flex-1 overflow-auto">
-          <table className="w-full text-left border-collapse">
-            <thead className="sticky top-0 bg-white z-10 shadow-sm border-b border-slate-200">
-              <tr>
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Order ID</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Customer</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Date</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Items</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Total</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {mockOrders.map((order) => (
-                <tr key={order.id} className="hover:bg-slate-50 transition-colors">
-                  <td className="px-6 py-4 text-sm font-bold text-slate-900">{order.id}</td>
-                  <td className="px-6 py-4 text-sm font-medium text-slate-700">{order.customer}</td>
-                  <td className="px-6 py-4 text-sm text-slate-600">{order.date}</td>
-                  <td className="px-6 py-4 text-sm text-slate-600">{order.items}</td>
-                  <td className="px-6 py-4 text-sm font-bold text-slate-900">${order.total.toFixed(2)}</td>
-                  <td className="px-6 py-4">
-                    <span className={`px-2.5 py-1 rounded-md text-xs font-bold ${statusColors[order.status]}`}>
-                      {order.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <button className="p-2 text-slate-400 hover:text-primary transition-colors inline-block" title="View Details">
-                      <Eye size={18} />
-                    </button>
-                  </td>
+          {loading ? (
+            <div className="p-8 text-center text-slate-500">Loading orders...</div>
+          ) : (
+            <table className="w-full text-left border-collapse">
+              <thead className="sticky top-0 bg-white z-10 shadow-sm border-b border-slate-200">
+                <tr>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Order ID</th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Customer</th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Date</th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Items</th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Total</th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {orders.map((order) => (
+                  <tr key={order._id} className="hover:bg-slate-50 transition-colors">
+                    <td className="px-6 py-4 text-sm font-bold text-slate-900">{order._id.substring(0,8).toUpperCase()}</td>
+                    <td className="px-6 py-4 text-sm font-medium text-slate-700">{order.billing?.firstName} {order.billing?.lastName}</td>
+                    <td className="px-6 py-4 text-sm text-slate-600">{new Date(order.createdAt).toLocaleDateString()}</td>
+                    <td className="px-6 py-4 text-sm text-slate-600">{order.items?.length || 0}</td>
+                    <td className="px-6 py-4 text-sm font-bold text-slate-900">৳{(order.total || 0).toFixed(2)}</td>
+                    <td className="px-6 py-4">
+                      <select 
+                        value={order.status}
+                        onChange={(e) => handleStatusChange(order._id, e.target.value)}
+                        className={`px-2.5 py-1 rounded-md text-xs font-bold border-0 cursor-pointer ${statusColors[order.status] || 'bg-slate-100 text-slate-700'}`}
+                      >
+                        <option value="Pending">Pending</option>
+                        <option value="Processing">Processing</option>
+                        <option value="Shipped">Shipped</option>
+                        <option value="Delivered">Delivered</option>
+                        <option value="Cancelled">Cancelled</option>
+                      </select>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <button className="p-2 text-slate-400 hover:text-primary transition-colors inline-block" title="View Details">
+                        <Eye size={18} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+                {orders.length === 0 && (
+                   <tr><td colSpan={7} className="text-center p-8 text-slate-500">No orders found.</td></tr>
+                )}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
     </AdminLayout>

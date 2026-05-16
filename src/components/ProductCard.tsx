@@ -88,9 +88,9 @@ export default function ProductCard({ product, idx = 0 }: { product: any, idx?: 
         
         <div className="mt-auto flex items-center justify-between">
           <div className="flex flex-col">
-            <span className="font-bold text-lg sm:text-xl text-slate-900">${currentPrice.toFixed(2)}</span>
+            <span className="font-bold text-lg sm:text-xl text-slate-900">৳{currentPrice.toFixed(2)}</span>
             {product.discount > 0 && (
-              <span className="text-xs sm:text-sm text-slate-400 line-through">${product.originalPrice?.toFixed(2)}</span>
+              <span className="text-xs sm:text-sm text-slate-400 line-through">৳{product.originalPrice?.toFixed(2)}</span>
             )}
           </div>
           <button 
@@ -185,9 +185,9 @@ export default function ProductCard({ product, idx = 0 }: { product: any, idx?: 
                    </div>
                    
                    <div className="flex items-end gap-3 mb-8">
-                      <span className="text-3xl font-bold text-slate-900">${currentPrice.toFixed(2)}</span>
+                      <span className="text-3xl font-bold text-slate-900">৳{currentPrice.toFixed(2)}</span>
                       {product.discount > 0 && (
-                        <span className="text-lg text-slate-400 line-through mb-1">${product.originalPrice?.toFixed(2)}</span>
+                        <span className="text-lg text-slate-400 line-through mb-1">৳{product.originalPrice?.toFixed(2)}</span>
                       )}
                    </div>
                    

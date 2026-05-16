@@ -43,7 +43,7 @@ export default function Cart() {
                         {item.size && <span>Size: <span className="font-medium text-slate-700">{item.size}</span></span>}
                       </p>
                     )}
-                    <p className="text-primary font-bold mt-1">${item.price.toFixed(2)}</p>
+                    <p className="text-primary font-bold mt-1">৳{item.price.toFixed(2)}</p>
                  </div>
                  
                  <div className="flex items-center gap-3 bg-white rounded-lg p-1 border border-slate-200">
@@ -53,7 +53,7 @@ export default function Cart() {
                  </div>
                  
                  <div className="font-bold text-lg w-24 text-right hidden sm:block text-slate-900">
-                    ${(item.price * item.quantity).toFixed(2)}
+                    ৳{(item.price * item.quantity).toFixed(2)}
                  </div>
 
                  <button onClick={() => removeItem(uniqueId)} className="absolute top-4 right-4 text-slate-400 hover:text-danger transition-colors p-2 sm:p-0 sm:relative sm:top-auto sm:right-auto">
@@ -71,7 +71,7 @@ export default function Cart() {
               <div className="space-y-4 mb-6">
                  <div className="flex justify-between text-slate-600">
                    <span>Subtotal</span>
-                   <span className="font-medium text-slate-900">${total().toFixed(2)}</span>
+                   <span className="font-medium text-slate-900">৳{total().toFixed(2)}</span>
                  </div>
                  <div className="flex justify-between text-slate-600">
                    <span>Shipping estimate</span>
@@ -81,7 +81,7 @@ export default function Cart() {
               
               <div className="border-t border-slate-100 pt-4 mb-6 flex justify-between items-center">
                  <span className="text-lg font-bold text-slate-900">Total</span>
-                 <span className="text-2xl font-bold text-primary">${total().toFixed(2)}</span>
+                 <span className="text-2xl font-bold text-primary">৳{total().toFixed(2)}</span>
               </div>
               
               <button 
