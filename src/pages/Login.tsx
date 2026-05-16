@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
@@ -10,6 +10,8 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirectParams = searchParams.get('redirect');
   const { signInWithGoogle, signInWithEmail, resetPassword } = useAuth();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -23,7 +25,7 @@ export default function Login() {
     try {
       await signInWithEmail(email, password);
       toast.success('Logged in successfully!');
-      navigate('/');
+      navigate(redirectParams || '/');
     } catch (error: any) {
       const msg = error.message || 'Failed to login';
       toast.error(msg);
@@ -36,7 +38,7 @@ export default function Login() {
     try {
       await signInWithGoogle();
       toast.success('Logged in successfully!');
-      navigate('/');
+      navigate(redirectParams || '/');
     } catch (error: any) {
       if (error?.code !== 'auth/popup-closed-by-user') {
         toast.error('Failed to log in with Google');

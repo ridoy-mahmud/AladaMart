@@ -80,6 +80,11 @@ export default function Shop() {
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
   const paginatedProducts = filteredProducts.slice((currentPage - 1) * productsPerPage, currentPage * productsPerPage);
 
+  const handlePageChange = (page: number | ((prev: number) => number)) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const renderPagination = () => {
     if (totalPages <= 1) return null;
 
@@ -96,7 +101,7 @@ export default function Shop() {
     pages.push(
       <button 
         key="prev" 
-        onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+        onClick={() => handlePageChange(prev => Math.max(1, typeof prev === 'number' ? prev - 1 : 1))}
         disabled={currentPage === 1}
         className={`px-4 h-10 rounded-lg flex items-center justify-center border font-medium transition-colors ${currentPage === 1 ? 'border-slate-100 text-slate-300 cursor-not-allowed' : 'border-slate-200 text-slate-600 hover:bg-slate-50'}`}
       >
@@ -106,7 +111,7 @@ export default function Shop() {
 
     if (startPage > 1) {
       pages.push(
-        <button key={1} onClick={() => setCurrentPage(1)} className="w-10 h-10 rounded-lg flex items-center justify-center border border-slate-200 text-slate-600 hover:bg-slate-50 hidden sm:flex">1</button>
+        <button key={1} onClick={() => handlePageChange(1)} className="w-10 h-10 rounded-lg flex items-center justify-center border border-slate-200 text-slate-600 hover:bg-slate-50 hidden sm:flex">1</button>
       );
       if (startPage > 2) {
         pages.push(<span key="dots-1" className="w-10 h-10 flex items-center justify-center text-slate-400 hidden sm:flex">...</span>);
@@ -117,7 +122,7 @@ export default function Shop() {
         pages.push(
           <button 
             key={i} 
-            onClick={() => setCurrentPage(i)}
+            onClick={() => handlePageChange(i)}
             className={`w-10 h-10 rounded-lg flex items-center justify-center border transition-colors ${currentPage === i ? 'border-primary bg-primary text-white font-bold shadow-sm' : 'border-slate-200 text-slate-600 hover:bg-slate-50'}`}
           >
             {i}
@@ -130,7 +135,7 @@ export default function Shop() {
         pages.push(<span key="dots-2" className="w-10 h-10 flex items-center justify-center text-slate-400 hidden sm:flex">...</span>);
       }
       pages.push(
-        <button key={totalPages} onClick={() => setCurrentPage(totalPages)} className="w-10 h-10 rounded-lg flex items-center justify-center border border-slate-200 text-slate-600 hover:bg-slate-50 hidden sm:flex">{totalPages}</button>
+        <button key={totalPages} onClick={() => handlePageChange(totalPages)} className="w-10 h-10 rounded-lg flex items-center justify-center border border-slate-200 text-slate-600 hover:bg-slate-50 hidden sm:flex">{totalPages}</button>
       );
     }
 
@@ -138,7 +143,7 @@ export default function Shop() {
     pages.push(
       <button 
         key="next" 
-        onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+        onClick={() => handlePageChange(prev => Math.min(totalPages, typeof prev === 'number' ? prev + 1 : totalPages))}
         disabled={currentPage === totalPages}
         className={`px-4 h-10 rounded-lg flex items-center justify-center border font-medium transition-colors ${currentPage === totalPages ? 'border-slate-100 text-slate-300 cursor-not-allowed' : 'border-slate-200 text-slate-600 hover:bg-slate-50'}`}
       >

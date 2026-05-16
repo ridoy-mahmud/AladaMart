@@ -28,8 +28,13 @@ const connectDB = async () => {
 
 // Middleware to ensure DB connection before handling requests
 app.use("/api", async (req, res, next) => {
-  await connectDB();
-  next();
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    console.error("Database connection failed", err);
+    res.status(500).json({ error: "Database connection failed" });
+  }
 });
 
 // App Routes

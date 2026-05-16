@@ -118,13 +118,35 @@ const realisticProducts = [
   // TV
   { title: "Samsung OLED 65\"", price: 1799, brand: "Samsung", category: "Television", thumb: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?q=80&w=800&auto=format&fit=crop" },
   { title: "LG C4 OLED 55\"", price: 1499, brand: "LG", category: "Television", thumb: "https://images.unsplash.com/photo-1552831388-6a0b35077328?q=80&w=800&auto=format&fit=crop" },
-  { title: "Sony Bravia XR 65\"", price: 1999, brand: "Sony", category: "Television", thumb: "https://images.unsplash.com/photo-1560169897-fc0cdbdfa4d5?q=80&w=800&auto=format&fit=crop" }
+  { title: "Sony Bravia XR 65\"", price: 1999, brand: "Sony", category: "Television", thumb: "https://images.unsplash.com/photo-1560169897-fc0cdbdfa4d5?q=80&w=800&auto=format&fit=crop" },
+
+  // 20 New Products Added
+  { title: "Razer DeathAdder V3 Pro", price: 149, brand: "Realme", category: "Accessories", thumb: "https://images.unsplash.com/photo-1527814050087-179f826353d2?q=80&w=800&auto=format&fit=crop" },
+  { title: "Logitech MX Master 3S", price: 99, brand: "LG", category: "Accessories", thumb: "https://images.unsplash.com/photo-1615663245857-ac931145a201?q=80&w=800&auto=format&fit=crop" },
+  { title: "Keychron K2 Wireless", price: 89, brand: "HP", category: "Accessories", thumb: "https://images.unsplash.com/photo-1595225476474-87563907a212?q=80&w=800&auto=format&fit=crop" },
+  { title: "Dell UltraSharp 27 4K", price: 599, brand: "Intel", category: "Accessories", thumb: "https://images.unsplash.com/photo-1527443154391-507e9dc6c5cc?q=80&w=800&auto=format&fit=crop" },
+  { title: "Elgato Stream Deck", price: 149, brand: "Sony", category: "Accessories", thumb: "https://images.unsplash.com/photo-1621213076722-e3a1ec43d0fd?q=80&w=800&auto=format&fit=crop" },
+  { title: "Samsung T7 Portable SSD 1TB", price: 119, brand: "Samsung", category: "Accessories", thumb: "https://images.unsplash.com/photo-1597848212624-a19eb35e2651?q=80&w=800&auto=format&fit=crop" },
+  { title: "Apple Magic Trackpad", price: 129, brand: "Apple", category: "Accessories", thumb: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?q=80&w=800&auto=format&fit=crop" },
+  { title: "Dyson V15 Detect", price: 699, brand: "LG", category: "Home Appliances", thumb: "https://images.unsplash.com/photo-1558317374-067fb5f400cb?q=80&w=800&auto=format&fit=crop" },
+  { title: "Philips Hue Starter Kit", price: 199, brand: "LG", category: "Home Appliances", thumb: "https://images.unsplash.com/photo-1550989460-0adf9ea622e2?q=80&w=800&auto=format&fit=crop" },
+  { title: "Nespresso Vertuo Plus", price: 159, brand: "LG", category: "Home Appliances", thumb: "https://images.unsplash.com/photo-1559525839-b184a4d698c7?q=80&w=800&auto=format&fit=crop" },
+  { title: "Ember Temperature Control Mug", price: 129, brand: "LG", category: "Home Appliances", thumb: "https://images.unsplash.com/photo-1517502474136-11f8e12d4d9b?q=80&w=800&auto=format&fit=crop" },
+  { title: "Sonos Arc Soundbar", price: 899, brand: "LG", category: "Audio & Headphones", thumb: "https://images.unsplash.com/photo-1545620958-3d1486bc05a1?q=80&w=800&auto=format&fit=crop" },
+  { title: "Bose SoundLink Flex", price: 149, brand: "Bose", category: "Audio & Headphones", thumb: "https://images.unsplash.com/photo-1615215096185-c54dced1ceba?q=80&w=800&auto=format&fit=crop" },
+  { title: "Sony HT-A7000", price: 1299, brand: "Sony", category: "Audio & Headphones", thumb: "https://images.unsplash.com/photo-1588693273928-912df075d31d?q=80&w=800&auto=format&fit=crop" },
+  { title: "Insta360 X3", price: 449, brand: "Canon", category: "Cameras", thumb: "https://images.unsplash.com/photo-1526170375885-4dcf0171a067?q=80&w=800&auto=format&fit=crop" },
+  { title: "DJI Mini 3 Pro", price: 759, brand: "Canon", category: "Cameras", thumb: "https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?q=80&w=800&auto=format&fit=crop" },
+  { title: "Nikon Z fc", price: 959, brand: "Canon", category: "Cameras", thumb: "https://images.unsplash.com/photo-1518105749320-b3b3a3bc9dfc?q=80&w=800&auto=format&fit=crop" },
+  { title: "Kindle Paperwhite", price: 139, brand: "Apple", category: "Tablets", thumb: "https://images.unsplash.com/photo-1594958184511-3ee4408304c5?q=80&w=800&auto=format&fit=crop" },
+  { title: "Microsoft Surface Pro 9", price: 999, brand: "Intel", category: "Tablets", thumb: "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?q=80&w=800&auto=format&fit=crop" },
+  { title: "Oura Ring Gen3", price: 299, brand: "Apple", category: "Wearables", thumb: "https://images.unsplash.com/photo-1627989580309-bfaf3ce58ce8?q=80&w=800&auto=format&fit=crop" }
 ];
 
 const sampleBlogs = [
-  { title: "Top 10 Tech Gadgets for 2026", slug: "top-10-tech-gadgets", excerpt: "Discover the most anticipated gadgets...", coverImage: "https://images.unsplash.com/photo-1498049794561-7780e7231661?q=80&w=800&auto=format&fit=crop", category: "Tech News", isPublished: true },
-  { title: "How to Choose the Perfect Laptop", slug: "how-to-choose-laptop", excerpt: "A comprehensive guide to buying your next machine.", coverImage: "https://images.unsplash.com/photo-1531297172867-628c6e269137?q=80&w=800&auto=format&fit=crop", category: "Buying Guide", isPublished: true },
-  { title: "Smart Home Setup: A Beginner's Guide", slug: "smart-home-setup", excerpt: "Everything you need to automate your life.", coverImage: "https://images.unsplash.com/photo-1558002038-1055907df827?q=80&w=800&auto=format&fit=crop", category: "How-to", isPublished: true }
+  { title: "Top 10 Tech Gadgets for 2026", slug: "top-10-tech-gadgets", excerpt: "Discover the most anticipated gadgets...", content: "# Top 10 Tech Gadgets for 2026\n\nDiscover the most anticipated gadgets coming this year. From AI-powered smart home hubs to transparent OLED displays, the future is here.", coverImage: "https://images.unsplash.com/photo-1498049794561-7780e7231661?q=80&w=800&auto=format&fit=crop", category: "Tech News", isPublished: true },
+  { title: "How to Choose the Perfect Laptop", slug: "how-to-choose-laptop", excerpt: "A comprehensive guide to buying your next machine.", content: "# How to Choose the Perfect Laptop\n\nBuying a laptop can be overwhelming with so many choices. Here is what you need to prioritize: CPU, RAM, display quality, and battery life depending on your use case.", coverImage: "https://images.unsplash.com/photo-1531297172867-628c6e269137?q=80&w=800&auto=format&fit=crop", category: "Buying Guide", isPublished: true },
+  { title: "Smart Home Setup: A Beginner's Guide", slug: "smart-home-setup", excerpt: "Everything you need to automate your life.", content: "# Smart Home Setup: A Beginner's Guide\n\nAutomating your home is easier than ever. Start with smart plugs and lightbulbs, then move on to a central hub and smart locks. Security and convenience combined.", coverImage: "https://images.unsplash.com/photo-1558002038-1055907df827?q=80&w=800&auto=format&fit=crop", category: "How-to", isPublished: true }
 ];
 
 const sampleBanners = [

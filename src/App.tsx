@@ -21,6 +21,7 @@ import AdminOrders from './pages/admin/Orders';
 import AdminBlogs from './pages/admin/Blogs';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './context/AuthContext';
+import CartSync from './components/CartSync';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -35,6 +36,7 @@ function ScrollToTop() {
 export default function App() {
   return (
     <AuthProvider>
+      <CartSync />
       <BrowserRouter>
         <ScrollToTop />
         <Toaster position="bottom-right" />

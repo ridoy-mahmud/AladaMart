@@ -7,7 +7,7 @@ const router = Router();
 // Get all blogs
 router.get('/', async (req, res) => {
   try {
-    const blogs = await Blog.find({ isPublished: true }).sort({ position: 1, createdAt: -1 });
+    const blogs = await Blog.find({ isPublished: true } as any).sort({ position: 1, createdAt: -1 } as any);
     res.json(blogs);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
 // Admin get all blogs
 router.get('/all', async (req, res) => {
   try {
-    const blogs = await Blog.find().sort({ position: 1, createdAt: -1 });
+    const blogs = await Blog.find().sort({ position: 1, createdAt: -1 } as any);
     res.json(blogs);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -27,7 +27,7 @@ router.get('/all', async (req, res) => {
 // Get single blog by slug
 router.get('/slug/:slug', async (req, res) => {
   try {
-    const blog = await Blog.findOne({ slug: req.params.slug });
+    const blog = await Blog.findOne({ slug: req.params.slug } as any);
     if (!blog) {
       return res.status(404).json({ message: 'Blog not found' });
     }
@@ -48,7 +48,7 @@ router.post('/', async (req, res) => {
     let slug = req.body.slug || baseSlug;
     
     let count = 1;
-    while (await Blog.findOne({ slug })) {
+    while (await Blog.findOne({ slug } as any)) {
       slug = `${baseSlug}-${count}`;
       count++;
     }
@@ -69,7 +69,7 @@ router.post('/', async (req, res) => {
 // Update blog
 router.put('/:id', async (req, res) => {
   try {
-    const blog = await Blog.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const blog = await (Blog as any).findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!blog) return res.status(404).json({ message: 'Blog not found' });
     res.json(blog);
   } catch (error: any) {
@@ -80,7 +80,7 @@ router.put('/:id', async (req, res) => {
 // Delete blog
 router.delete('/:id', async (req, res) => {
   try {
-    const blog = await Blog.findByIdAndDelete(req.params.id);
+    const blog = await (Blog as any).findByIdAndDelete(req.params.id);
     if (!blog) return res.status(404).json({ message: 'Blog not found' });
     res.json({ message: 'Blog deleted' });
   } catch (error: any) {
@@ -101,7 +101,7 @@ router.post('/reorder', async (req, res) => {
       }
     }));
     
-    await Blog.bulkWrite(updates);
+    await (Blog as any).bulkWrite(updates);
     res.json({ message: 'Reordered successfully' });
   } catch (error: any) {
     res.status(500).json({ message: error.message });

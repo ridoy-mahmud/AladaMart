@@ -1,10 +1,13 @@
 import React from 'react';
 import { useCartStore } from '../store/useCartStore';
 import { Minus, Plus, Trash2, ArrowRight, ShoppingBag } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 export default function Cart() {
   const { items, updateQuantity, removeItem, total } = useCartStore();
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
   if (items.length === 0) {
     return (
@@ -81,9 +84,18 @@ export default function Cart() {
                  <span className="text-2xl font-bold text-primary">${total().toFixed(2)}</span>
               </div>
               
-              <Link to="/checkout" className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary-dark transition-colors px-6 py-4 rounded-lg text-white font-medium shadow-md shadow-primary/20 text-lg">
+              <button 
+                onClick={() => {
+                  if (user) {
+                    navigate('/checkout');
+                  } else {
+                    navigate('/login?redirect=/checkout');
+                  }
+                }}
+                className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary-dark transition-colors px-6 py-4 rounded-lg text-white font-medium shadow-md shadow-primary/20 text-lg"
+              >
                  Proceed to Checkout <ArrowRight size={20} />
-               </Link>
+              </button>
            </div>
         </div>
       </div>

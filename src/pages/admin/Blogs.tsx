@@ -9,7 +9,7 @@ export default function AdminBlogs() {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     _id: '', title: '', slug: '', excerpt: '', content: '', coverImage: '',
-    category: '', readTime: '', isPublished: true
+    category: '', readTime: '', isPublished: true, author: '', authorAvatar: ''
   });
 
   const fetchBlogs = async () => {
@@ -42,7 +42,7 @@ export default function AdminBlogs() {
       
       if (!res.ok) throw new Error('Failed to save blog');
       toast.success('Blog saved successfully');
-      setFormData({ _id: '', title: '', slug: '', excerpt: '', content: '', coverImage: '', category: '', readTime: '', isPublished: true });
+      setFormData({ _id: '', title: '', slug: '', excerpt: '', content: '', coverImage: '', category: '', readTime: '', isPublished: true, author: '', authorAvatar: '' });
       setIsEditing(false);
       fetchBlogs();
     } catch (error) {
@@ -51,7 +51,7 @@ export default function AdminBlogs() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this blog?')) return;
+    // Confirmation is removed due to iframe sandbox restrictions in preview
     try {
       const res = await fetch(`/api/blogs/${id}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Failed to delete blog');
@@ -105,44 +105,52 @@ export default function AdminBlogs() {
         {isEditing ? (
           <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
             <h2 className="text-lg font-bold mb-4">{formData._id ? 'Edit Blog' : 'Create New Blog'}</h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">Title *</label>
-                  <input required type="text" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full px-3 py-2 border rounded-lg" />
+                  <input required type="text" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">Slug (auto-generated if empty)</label>
-                  <input type="text" value={formData.slug} onChange={e => setFormData({...formData, slug: e.target.value})} className="w-full px-3 py-2 border rounded-lg" />
+                  <input type="text" value={formData.slug} onChange={e => setFormData({...formData, slug: e.target.value})} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">Category</label>
-                  <input type="text" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full px-3 py-2 border rounded-lg" />
+                  <input type="text" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">Read Time (e.g. 5 min read)</label>
-                  <input type="text" value={formData.readTime} onChange={e => setFormData({...formData, readTime: e.target.value})} className="w-full px-3 py-2 border rounded-lg" />
+                  <input type="text" value={formData.readTime} onChange={e => setFormData({...formData, readTime: e.target.value})} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Author Name</label>
+                  <input type="text" value={formData.author} onChange={e => setFormData({...formData, author: e.target.value})} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Author Avatar URL</label>
+                  <input type="text" value={formData.authorAvatar} onChange={e => setFormData({...formData, authorAvatar: e.target.value})} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" />
                 </div>
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-slate-700 mb-1">Cover Image URL</label>
-                  <input type="text" value={formData.coverImage} onChange={e => setFormData({...formData, coverImage: e.target.value})} className="w-full px-3 py-2 border rounded-lg" />
+                  <input type="text" value={formData.coverImage} onChange={e => setFormData({...formData, coverImage: e.target.value})} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" />
                 </div>
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-slate-700 mb-1">Excerpt</label>
-                  <textarea value={formData.excerpt} onChange={e => setFormData({...formData, excerpt: e.target.value})} className="w-full px-3 py-2 border rounded-lg" rows={2} />
+                  <textarea value={formData.excerpt} onChange={e => setFormData({...formData, excerpt: e.target.value})} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" rows={2} />
                 </div>
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-slate-700 mb-1">Content (Markdown supported) *</label>
-                  <textarea required value={formData.content} onChange={e => setFormData({...formData, content: e.target.value})} className="w-full px-3 py-2 border rounded-lg font-mono text-sm" rows={10} />
+                  <textarea required value={formData.content} onChange={e => setFormData({...formData, content: e.target.value})} className="w-full px-3 py-2 border border-slate-300 rounded-lg font-mono text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" rows={25} />
                 </div>
-                <div className="md:col-span-2 flex items-center">
-                  <input type="checkbox" id="isPublished" checked={formData.isPublished} onChange={e => setFormData({...formData, isPublished: e.target.checked})} className="mr-2" />
-                  <label htmlFor="isPublished" className="text-sm font-medium text-slate-700">Published</label>
+                <div className="md:col-span-2 flex items-center bg-slate-50 p-4 rounded-lg border border-slate-200 gap-3">
+                  <input type="checkbox" id="isPublished" checked={formData.isPublished} onChange={e => setFormData({...formData, isPublished: e.target.checked})} className="w-5 h-5 text-primary rounded focus:ring-primary border-slate-300" />
+                  <label htmlFor="isPublished" className="text-sm font-medium text-slate-900 cursor-pointer">Publish this blog post immediately</label>
                 </div>
               </div>
-              <div className="flex gap-4 border-t pt-4">
-                <button type="submit" className="bg-primary text-white px-6 py-2 rounded-lg">Save</button>
-                <button type="button" onClick={() => { setIsEditing(false); setFormData({ _id: '', title: '', slug: '', excerpt: '', content: '', coverImage: '', category: '', readTime: '', isPublished: true }); }} className="px-6 py-2 border rounded-lg">Cancel</button>
+              <div className="flex gap-4 border-t pt-6">
+                <button type="submit" className="bg-primary hover:bg-primary/90 text-white font-medium px-6 py-2.5 rounded-lg transition-colors">Save Blog Post</button>
+                <button type="button" onClick={() => { setIsEditing(false); setFormData({ _id: '', title: '', slug: '', excerpt: '', content: '', coverImage: '', category: '', readTime: '', isPublished: true, author: '', authorAvatar: '' }); }} className="px-6 py-2.5 border border-slate-300 font-medium text-slate-700 hover:bg-slate-50 rounded-lg transition-colors">Cancel</button>
               </div>
             </form>
           </div>

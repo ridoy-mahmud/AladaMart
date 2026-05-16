@@ -43,49 +43,17 @@ export default function BlogPost() {
   return (
     <div className="bg-white min-h-screen pb-20">
       {/* Hero Section */}
-      <div className="relative w-full h-[50vh] md:h-[60vh] bg-slate-900 overflow-hidden">
-        <div className="absolute inset-0 bg-black/40 z-10" />
-        <img 
-          src={post.coverImage} 
-          alt={post.title} 
-          className="w-full h-full object-cover opacity-80"
-        />
-        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center px-4 max-w-4xl mx-auto mt-10 text-white">
-          <div className="mb-6 flex items-center justify-center">
-            <span className="bg-primary/90 text-white text-sm font-bold tracking-wider uppercase px-4 py-1.5 rounded-full backdrop-blur-sm">
-              {post.category}
-            </span>
-          </div>
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-3xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6"
-          >
-            {post.title}
-          </motion.h1>
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="flex flex-wrap items-center justify-center gap-4 text-sm md:text-base text-white/90"
-          >
-            <div className="flex items-center gap-2 border-r border-white/20 pr-4">
-              <img src={post.authorAvatar} alt={post.author} className="w-8 h-8 rounded-full border border-white/30" />
-              <span className="font-medium">{post.author}</span>
-            </div>
-            <div className="flex items-center gap-1.5 border-r border-white/20 pr-4">
-              <Calendar size={16} />
-              <span>{post.date}</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Clock size={16} />
-              <span>{post.readTime}</span>
-            </div>
-          </motion.div>
+      <div className="w-full max-w-4xl mx-auto px-4 pt-8 md:pt-12">
+        <div className="w-full h-[40vh] md:h-[50vh] rounded-3xl overflow-hidden mb-8 shadow-sm">
+          <img 
+            src={post.coverImage} 
+            alt={post.title} 
+            className="w-full h-full object-cover"
+          />
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 py-12 md:py-16 flex flex-col md:flex-row gap-8 lg:gap-12 relative">
+      <div className="max-w-4xl mx-auto px-4 flex flex-col md:flex-row gap-8 lg:gap-12 relative">
         
         {/* Social Share Sidebar */}
         <div className="md:w-16 flex-shrink-0 order-2 md:order-1 pt-6">
@@ -110,8 +78,21 @@ export default function BlogPost() {
 
         {/* Content */}
         <div className="flex-1 order-1 md:order-2">
-          <div className="prose prose-lg prose-slate max-w-none prose-headings:font-bold prose-a:text-primary prose-img:rounded-2xl">
-            <Markdown>{post.content}</Markdown>
+          <div className="mb-6">
+            <span className="bg-primary/10 text-primary text-xs font-bold tracking-wider uppercase px-2.5 py-0.5 rounded-full mb-3 inline-block">
+              {post.category}
+            </span>
+            <p className="text-sm font-medium text-slate-500 mb-6">
+              By <span className="text-slate-900 font-bold">{post.author}</span>
+            </p>
+          </div>
+
+          <h1 className="text-3xl md:text-5xl font-extrabold text-slate-900 leading-tight mb-10">
+            {post.title}
+          </h1>
+
+          <div className="prose prose-lg prose-slate max-w-none prose-headings:font-bold prose-headings:text-slate-900 prose-a:text-primary prose-img:rounded-2xl">
+            <Markdown>{post.content?.replace(/^#\s+[^\n]+[\r\n]+/, '')}</Markdown>
           </div>
           
           <div className="mt-16 pt-8 border-t border-slate-200 flex items-center justify-between">

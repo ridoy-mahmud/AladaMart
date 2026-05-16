@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Clock } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import Loader from '../components/Loader';
 
 export default function Blog() {
@@ -84,15 +84,6 @@ export default function Blog() {
               </Link>
               
               <div className="p-6 flex flex-col flex-1">
-                <div className="flex items-center gap-2 text-sm text-slate-500 mb-3">
-                  <span>{post.date}</span>
-                  <span>•</span>
-                  <div className="flex items-center gap-1">
-                    <Clock size={14} />
-                    <span>{post.readTime}</span>
-                  </div>
-                </div>
-                
                 <Link to={`/blog/${post.slug}`}>
                   <h2 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-primary transition-colors line-clamp-2">
                     {post.title}
@@ -105,7 +96,6 @@ export default function Blog() {
                 
                 <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-100">
                   <div className="flex items-center gap-3">
-                    <img src={post.authorAvatar} alt={post.author} className="w-8 h-8 rounded-full object-cover" />
                     <span className="text-sm font-medium text-slate-900">{post.author}</span>
                   </div>
                   <Link to={`/blog/${post.slug}`} className="text-primary hover:text-primary/80 transition-colors">
