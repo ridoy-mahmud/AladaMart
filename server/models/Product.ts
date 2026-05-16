@@ -10,7 +10,7 @@ const ProductSchema = new mongoose.Schema({
   discount: { type: Number, default: 0, min: 0, max: 100 },
   images: [{ url: String, alt: String }],
   thumbnail: { type: String, required: true },
-  category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
+  category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
   categoryName: { type: String },
   brand: { type: mongoose.Schema.Types.ObjectId, ref: 'Brand' },
   brandName: { type: String },

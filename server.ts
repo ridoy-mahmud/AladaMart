@@ -14,24 +14,16 @@ async function startServer() {
 
   // Connect to MongoDB
   try {
-    if (process.env.MONGODB_URI) {
-      await mongoose.connect(process.env.MONGODB_URI);
-      console.log("Connected to MongoDB successfully");
-      
-      const { Product } = await import("./server/models/Product.js");
-      const count = await Product.countDocuments();
-      if (count === 0) {
-        console.log("Database is empty, triggering seed...");
-        try {
-          await fetch("http://localhost:3000/api/seed", { method: "POST" });
-          console.log("Auto-seeded database.");
-        } catch(e) {
-          console.log("Could not auto-seed.", e);
-        }
-      }
-    } else {
-      console.warn("MONGODB_URI not found in environment variables");
+    let mongoUri = process.env.MONGODB_URI;
+    if (!mongoUri) {
+      console.warn("MONGODB_URI not found in environment variables. Starting in-memory MongoDB...");
+      const { MongoMemoryServer } = await import("mongodb-memory-server");
+      const mongod = await MongoMemoryServer.create();
+      mongoUri = mongod.getUri();
     }
+    
+    await mongoose.connect(mongoUri);
+    console.log("Connected to MongoDB successfully");
   } catch (err) {
     console.error("MongoDB connection error:", err);
   }
@@ -67,8 +59,23 @@ async function startServer() {
     });
   }
 
-  app.listen(PORT, "0.0.0.0", () => {
+  app.listen(PORT, "0.0.0.0", async () => {
     console.log(`Server running on port ${PORT}`);
+    
+    // Seed after the server is up
+    if (mongoose.connection.readyState === 1) {
+      try {
+        const { Product } = await import("./server/models/Product.js");
+        const count = await Product.countDocuments();
+        if (count === 0) {
+          console.log("Database is empty, triggering seed...");
+          await fetch(`http://localhost:${PORT}/api/seed`, { method: "POST" });
+          console.log("Auto-seeded database.");
+        }
+      } catch (err) {
+        console.error("Could not auto-seed database:", err);
+      }
+    }
   });
 }
 

@@ -74,7 +74,7 @@ export default function Blog() {
             >
               <Link to={`/blog/${post.slug}`} className="block relative overflow-hidden aspect-[16/10]">
                 <img 
-                  src={post.coverImage} 
+                  src={post.coverImage || undefined} 
                   alt={post.title} 
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />

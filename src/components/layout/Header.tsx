@@ -160,7 +160,7 @@ export default function Header() {
                              className="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg transition-colors"
                            >
                               <div className="w-10 h-10 bg-slate-50 rounded-md p-1 flex-shrink-0 border border-slate-100">
-                                 <img src={product.thumbnail} alt={product.title} className="w-full h-full object-contain mix-blend-multiply" />
+                                 <img src={product.thumbnail || undefined} alt={product.title} className="w-full h-full object-contain mix-blend-multiply" />
                               </div>
                               <div className="flex-1 min-w-0">
                                  <h5 className="text-sm font-medium text-slate-800 truncate">{product.title}</h5>

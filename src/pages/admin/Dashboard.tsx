@@ -38,14 +38,14 @@ export default function Dashboard() {
     const fetchDashboardData = async () => {
       try {
         const [prodRes, brandRes, catRes] = await Promise.all([
-          fetch('/api/products?limit=5'),
-          fetch('/api/brands'),
-          fetch('/api/categories')
+          fetch('/api/products?limit=5').catch(() => null),
+          fetch('/api/brands').catch(() => null),
+          fetch('/api/categories').catch(() => null)
         ]);
         
-        const prodData = await prodRes.json();
-        const brandsData = await brandRes.json();
-        const catData = await catRes.json();
+        const prodData = prodRes && prodRes.ok ? await prodRes.json() : [];
+        const brandsData = brandRes && brandRes.ok ? await brandRes.json() : [];
+        const catData = catRes && catRes.ok ? await catRes.json() : [];
         
         setStats({
            products: prodData.totalDocs || prodData.length || 0,
@@ -181,7 +181,7 @@ export default function Dashboard() {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-3">
                          <div className="w-10 h-10 rounded-lg bg-slate-100 p-1 flex items-center justify-center border border-slate-200">
-                           <img src={p.thumbnail} alt="" className="w-full h-full object-contain mix-blend-multiply" />
+                           <img src={p.thumbnail || undefined} alt="" className="w-full h-full object-contain mix-blend-multiply" />
                          </div>
                          <div className="min-w-0">
                            <p className="text-sm font-bold text-slate-900 truncate max-w-[200px]">{p.title}</p>

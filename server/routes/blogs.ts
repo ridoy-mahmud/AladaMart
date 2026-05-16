@@ -62,6 +62,7 @@ router.post('/', async (req, res) => {
     const savedBlog = await blog.save();
     res.status(201).json(savedBlog);
   } catch (error: any) {
+    console.error("Error saving blog:", error);
     res.status(400).json({ message: error.message });
   }
 });
@@ -73,6 +74,7 @@ router.put('/:id', async (req, res) => {
     if (!blog) return res.status(404).json({ message: 'Blog not found' });
     res.json(blog);
   } catch (error: any) {
+    console.error("Error updating blog:", error);
     res.status(400).json({ message: error.message });
   }
 });

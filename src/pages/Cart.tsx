@@ -34,7 +34,7 @@ export default function Cart() {
              const uniqueId = (item as any).cartItemId || item._id;
              return (
                <div key={uniqueId} className="flex flex-col sm:flex-row items-center gap-6 p-4 bg-white rounded-xl shadow-sm border border-slate-100 relative">
-                 <img src={item.thumbnail} alt={item.title} className="w-24 h-24 object-contain rounded-md bg-slate-50" />
+                 <img src={item.thumbnail || undefined} alt={item.title} className="w-24 h-24 object-contain rounded-md bg-slate-50" />
                  <div className="flex-1 text-center sm:text-left">
                     <Link to={`/product/${item._id}`} className="font-semibold text-lg hover:text-primary transition-colors text-slate-900">{item.title}</Link>
                     {(item.color || item.size) && (

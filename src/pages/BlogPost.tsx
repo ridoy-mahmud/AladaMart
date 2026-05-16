@@ -46,7 +46,7 @@ export default function BlogPost() {
       <div className="w-full max-w-4xl mx-auto px-4 pt-8 md:pt-12">
         <div className="w-full h-[40vh] md:h-[50vh] rounded-3xl overflow-hidden mb-8 shadow-sm">
           <img 
-            src={post.coverImage} 
+            src={post.coverImage || undefined} 
             alt={post.title} 
             className="w-full h-full object-cover"
           />

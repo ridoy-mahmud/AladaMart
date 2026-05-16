@@ -19,7 +19,7 @@ const connectDB = async () => {
   if (cachedDb) return cachedDb;
   if (!process.env.MONGODB_URI) {
     console.warn("MONGODB_URI is missing");
-    return null;
+    throw new Error("MONGODB_URI is missing. Please set it in your environment variables/Vercel settings.");
   }
   const db = await mongoose.connect(process.env.MONGODB_URI);
   cachedDb = db;

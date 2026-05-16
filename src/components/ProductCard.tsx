@@ -71,7 +71,7 @@ export default function ProductCard({ product, idx = 0 }: { product: any, idx?: 
       </div>
       
       <Link to={`/product/${product.slug}`} className="block relative overflow-hidden aspect-[4/3] p-6 bg-slate-50">
-        <img src={product.thumbnail} alt={product.title} className="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-500" />
+        <img src={product.thumbnail || undefined} alt={product.title} className="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-500" />
       </Link>
       
       <div className="p-4 sm:p-6 flex flex-col flex-1 bg-white">
@@ -129,7 +129,7 @@ export default function ProductCard({ product, idx = 0 }: { product: any, idx?: 
                         {product.discount}% OFF
                       </div>
                    )}
-                   <img src={product.thumbnail} alt={product.title} className="w-full h-full max-h-[300px] md:max-h-[400px] object-contain mix-blend-multiply" />
+                   <img src={product.thumbnail || undefined} alt={product.title} className="w-full h-full max-h-[300px] md:max-h-[400px] object-contain mix-blend-multiply" />
                 </div>
                 
                 <div className="w-full md:w-1/2 p-8 md:p-10 flex flex-col overflow-y-auto">

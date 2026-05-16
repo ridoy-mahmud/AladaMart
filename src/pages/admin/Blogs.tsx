@@ -31,13 +31,16 @@ export default function AdminBlogs() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const url = formData._id ? `/api/blogs/${formData._id}` : '/api/blogs';
-      const method = formData._id ? 'PUT' : 'POST';
+      const { _id, ...restData } = formData;
+      const url = _id ? `/api/blogs/${_id}` : '/api/blogs';
+      const method = _id ? 'PUT' : 'POST';
+      
+      const payload = _id ? formData : restData;
       
       const res = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(payload)
       });
       
       if (!res.ok) throw new Error('Failed to save blog');

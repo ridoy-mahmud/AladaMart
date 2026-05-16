@@ -109,7 +109,7 @@ export default function ProductDetail() {
                  onClick={() => setActiveImage(idx)}
                  className={`w-[88px] h-[88px] rounded-xl overflow-hidden flex items-center justify-center transition-all flex-shrink-0 ${activeImage === idx ? 'bg-[#f4f6f8] ring-1 ring-slate-200' : 'bg-[#f4f6f8] hover:bg-[#e2e8f0]'}`}
                >
-                 <img src={img} className="w-[60%] h-[60%] object-contain mix-blend-darken drop-shadow-sm" alt="Thumb" />
+                 <img src={img || undefined} className="w-[60%] h-[60%] object-contain mix-blend-darken drop-shadow-sm" alt="Thumb" />
                </button>
              ))}
            </div>
@@ -126,7 +126,7 @@ export default function ProductDetail() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3 }}
-                src={images[activeImage]} 
+                src={images[activeImage] || undefined} 
                 alt={product.title} 
                 className="w-full h-full object-contain mix-blend-darken drop-shadow-lg" 
               />
@@ -196,10 +196,26 @@ export default function ProductDetail() {
           </div>
           
           {/* Actions */}
-          <div className="flex flex-col sm:flex-row gap-4 mb-10 w-full sm:w-[180px]">
+          <div className="flex flex-col sm:flex-row gap-4 mb-10 w-full sm:w-auto">
+            <div className="flex items-center justify-between border border-slate-200 rounded-lg px-2 h-[52px] sm:w-[130px] bg-white">
+               <button 
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  className="p-2 text-slate-500 hover:text-black hover:bg-slate-50 rounded transition-colors"
+               >
+                 <Minus size={18} />
+               </button>
+               <span className="font-bold text-slate-900 w-8 text-center select-none">{quantity}</span>
+               <button 
+                  onClick={() => setQuantity(quantity + 1)}
+                  className="p-2 text-slate-500 hover:text-black hover:bg-slate-50 rounded transition-colors"
+               >
+                 <Plus size={18} />
+               </button>
+            </div>
+            
             <button 
               onClick={handleAddToCart}
-              className="bg-[#1e293b] hover:bg-black transition-colors text-white font-medium text-[15px] rounded-lg w-full flex items-center justify-center py-3.5 px-8 shadow-sm"
+              className="bg-[#1e293b] hover:bg-black transition-colors text-white font-medium text-[15px] rounded-lg w-full sm:w-auto sm:px-12 flex items-center justify-center h-[52px] shadow-sm"
             >
               Add to Cart
             </button>

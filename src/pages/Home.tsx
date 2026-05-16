@@ -6,17 +6,26 @@ import ProductCard from '../components/ProductCard';
 import Loader from '../components/Loader';
 
 export default function Home() {
-  const [products, setProducts] = useState([]);
-  const [brands, setBrands] = useState([]);
+  const [products, setProducts] = useState<any[]>([]);
+  const [brands, setBrands] = useState<any[]>([]);
+  const [blogs, setBlogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     Promise.all([
-      fetch('/api/products?limit=12').then(res => res.json()),
-      fetch('/api/brands').then(res => res.json())
-    ]).then(([productsData, brandsData]) => {
+      fetch('/api/products?limit=12').then(res => res.ok ? res.json() : []),
+      fetch('/api/brands').then(res => res.ok ? res.json() : []),
+      fetch('/api/blogs').then(res => res.ok ? res.json() : [])
+    ]).then(([productsData, brandsData, blogsData]) => {
       setProducts(Array.isArray(productsData) ? productsData : (productsData?.docs || []));
-      setBrands(brandsData);
+      setBrands(brandsData || []);
+      setBlogs(Array.isArray(blogsData) ? blogsData.slice(0, 3) : []);
+      setLoading(false);
+    }).catch(err => {
+      console.error("Failed to fetch home data", err);
+      setProducts([]);
+      setBrands([]);
+      setBlogs([]);
       setLoading(false);
     });
   }, []);
@@ -106,15 +115,18 @@ export default function Home() {
         <div className="flex w-max animate-marquee">
           {[...Array(4)].map((_, i) => (
             <React.Fragment key={i}>
-              {["Decoration", "Headphones", "Mobile", "Speakers", "Watch", "Earbuds", "Mouse"].map((category, idx) => (
-                <Link 
-                  key={`${i}-${idx}`} 
-                  to={`/shop?category=${encodeURIComponent(category.toLowerCase())}`}
-                  className="mx-2 md:mx-2.5 px-5 py-2 md:px-6 md:py-2.5 bg-[#f4f6f9] hover:bg-[#e2e8f0] text-[#5c6e82] hover:text-slate-900 font-medium text-[14px] md:text-[15px] rounded-xl transition-colors whitespace-nowrap"
-                >
-                  {category}
-                </Link>
-              ))}
+              {["Smartphones", "Laptops & PC", "Audio & Headphones", "Cameras", "Tablets", "Wearables", "Gaming"].map((category, idx) => {
+                const slug = category.toLowerCase().replace(/ & /g, '-').replace(/\s+/g, '-');
+                return (
+                  <Link 
+                    key={`${i}-${idx}`} 
+                    to={`/shop?category=${encodeURIComponent(slug)}`}
+                    className="mx-2 md:mx-2.5 px-5 py-2 md:px-6 md:py-2.5 bg-[#f4f6f9] hover:bg-[#e2e8f0] text-[#5c6e82] hover:text-slate-900 font-medium text-[14px] md:text-[15px] rounded-xl transition-colors whitespace-nowrap"
+                  >
+                    {category}
+                  </Link>
+                );
+              })}
             </React.Fragment>
           ))}
         </div>
@@ -135,7 +147,7 @@ export default function Home() {
             <Loader text="Loading products..." />
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 sm:gap-6">
             {products.map((product: any, idx: number) => (
               <ProductCard key={product._id} product={product} idx={idx} />
             ))}
@@ -170,6 +182,64 @@ export default function Home() {
         </div>
       </section>
       
+      {/* Latest Blogs */}
+      {blogs.length > 0 && (
+        <section className="pt-20 px-4 max-w-7xl mx-auto">
+          <div className="mb-8 flex items-end justify-between border-b border-slate-200 pb-4">
+            <div>
+              <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Latest from the Journal</h2>
+              <p className="text-sm text-slate-500 mt-1">Insights, trends, and modern e-commerce stories</p>
+            </div>
+            <Link to="/blog" className="text-sm font-medium text-slate-600 hover:text-primary transition-colors flex items-center gap-1 group">
+              View All <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {blogs.map((post, idx) => (
+              <motion.article 
+                key={post._id || post.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.1 }}
+                className="bg-white rounded-xl border border-slate-100 overflow-hidden hover:shadow-lg transition-all duration-300 group flex flex-col"
+              >
+                <Link to={`/blog/${post.slug}`} className="block relative overflow-hidden aspect-[2/1]">
+                  <img 
+                    src={post.coverImage || undefined} 
+                    alt={post.title} 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  {post.category && (
+                    <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-sm px-2.5 py-0.5 rounded text-[11px] font-semibold text-slate-800 uppercase tracking-wider">
+                      {post.category}
+                    </div>
+                  )}
+                </Link>
+                
+                <div className="p-5 flex flex-col flex-1">
+                  <Link to={`/blog/${post.slug}`}>
+                    <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-primary transition-colors line-clamp-2 leading-tight">
+                      {post.title}
+                    </h3>
+                  </Link>
+                  
+                  <p className="text-sm text-slate-600 mb-4 line-clamp-2 flex-1">
+                    {post.excerpt}
+                  </p>
+                  
+                  <div className="flex items-center justify-between mt-auto pt-3 border-t border-slate-50">
+                    <span className="text-xs font-medium text-slate-500">{post.author || 'Editorial'}</span>
+                    <Link to={`/blog/${post.slug}`} className="text-primary hover:text-primary/80 transition-colors">
+                      <ArrowRight size={16} />
+                    </Link>
+                  </div>
+                </div>
+              </motion.article>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Trust Badges */}
       <section className="py-20 max-w-7xl mx-auto px-4 border-t border-slate-100 mt-20">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">

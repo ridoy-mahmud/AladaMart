@@ -30,7 +30,7 @@ export default function AdminProducts() {
     setLoading(true);
     try {
       const res = await fetch('/api/products?limit=100');
-      const data = await res.json();
+      const data = res.ok ? await res.json() : [];
       setProducts(Array.isArray(data) ? data : (data?.docs || []));
     } catch (err) {
       toast.error('Failed to load products');
@@ -257,7 +257,7 @@ export default function AdminProducts() {
                       <input type="text" placeholder="https://example.com/image.jpg" value={formData.thumbnail} onChange={e => setFormData({...formData, thumbnail: e.target.value})} className="flex-1 border border-slate-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none" />
                       {formData.thumbnail && (
                         <div className="w-10 h-10 border border-slate-200 rounded-lg overflow-hidden flex-shrink-0 bg-slate-50">
-                           <img src={formData.thumbnail} alt="preview" className="w-full h-full object-contain" />
+                           <img src={formData.thumbnail || undefined} alt="preview" className="w-full h-full object-contain" />
                         </div>
                       )}
                     </div>

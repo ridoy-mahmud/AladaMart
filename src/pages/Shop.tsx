@@ -42,16 +42,16 @@ export default function Shop() {
         if (searchQuery) queryParams.append('search', searchQuery);
 
         const [prodRes, catRes, brandRes] = await Promise.all([
-          fetch(`/api/products?${queryParams.toString()}`),
-          fetch('/api/categories'),
-          fetch('/api/brands')
+          fetch(`/api/products?${queryParams.toString()}`).catch(() => null),
+          fetch('/api/categories').catch(() => null),
+          fetch('/api/brands').catch(() => null)
         ]);
         
-        const prods = await prodRes.json();
+        const prods = prodRes && prodRes.ok ? await prodRes.json() : [];
         setProducts(Array.isArray(prods) ? prods : (prods?.docs || []));
         
-        setCategories(catRes.ok ? await catRes.json() : []);
-        setBrands(brandRes.ok ? await brandRes.json() : []);
+        setCategories(catRes && catRes.ok ? await catRes.json() : []);
+        setBrands(brandRes && brandRes.ok ? await brandRes.json() : []);
       } catch (error) {
         console.error('Failed to fetch shop data', error);
       } finally {
