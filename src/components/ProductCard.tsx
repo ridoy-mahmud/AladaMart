@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, ShoppingCart, Eye, Heart, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -19,6 +19,18 @@ export default function ProductCard({ product, idx = 0 }: { product: any, idx?: 
   
   const [selectedColor, setSelectedColor] = useState(0);
   const [selectedSize, setSelectedSize] = useState(0);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsQuickViewOpen(false);
+      }
+    };
+    if (isQuickViewOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+      return () => document.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [isQuickViewOpen]);
 
   const handleAddToCart = (e?: React.MouseEvent) => {
     if (e) e.preventDefault();
